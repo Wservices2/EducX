@@ -151,9 +151,12 @@ app.post('/api/auth/register', async (req, res) => {
     );
 
     res.status(201).json({
+      success: true,
       message: 'Inscription réussie',
-      user,
-      token
+      data: {
+        user,
+        token
+      }
     });
 
   } catch (error) {
@@ -212,9 +215,12 @@ app.post('/api/auth/login', async (req, res) => {
     const { password: _, ...userWithoutPassword } = user;
 
     res.json({
+      success: true,
       message: 'Connexion réussie',
-      user: userWithoutPassword,
-      token
+      data: {
+        user: userWithoutPassword,
+        token
+      }
     });
 
   } catch (error) {
