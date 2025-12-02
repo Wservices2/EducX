@@ -1,0 +1,68 @@
+# A string used to distinguish different Supabase projects on the same host. Defaults to the
+# working directory name when running `supabase init`.
+project_id = "educx"
+
+[api]
+enabled = true
+# Port to use for the API URL.
+port = 54321
+# Schemas to expose in your API. Tables, views and foreign keys in
+# public schemas are automatically exposed in your API.
+schemas = ["public", "graphql_public"]
+# Extra schemas to expose in your API. Tables, views and foreign keys in
+# these schemas are also automatically exposed.
+extra_search_path = ["public"]
+# The maximum number of rows returns from a view, table, or function.
+# Limits the number of rows returned for a view, table, or function.
+# Can be overridden on a per-query basis by adding `LIMIT` in your SQL.
+max_rows = 1000
+
+[db]
+# Port to use for the local database URL.
+port = 54322
+# The database major version to use. Has to be the same as your remote
+# database's. Run `SHOW server_version;` on the remote database to check.
+major_version = 15
+
+[studio]
+enabled = true
+# Port to use for Supabase Studio.
+port = 54323
+# External URL of the API server that frontend connects to.
+# This is used by Supabase Studio to automatically load the environment variables.
+api_url = "http://127.0.0.1"
+# Open Supabase Studio in the browser on `supabase start`.
+open_browser = true
+
+[ingest]
+enabled = false
+# Port to use for the Ingest API URL.
+port = 54324
+# Extra command line arguments passed to the ingestion server.
+extra_args = []
+
+[storage]
+enabled = true
+# The maximum file size allowed for a file upload.
+file_size_limit = "50MiB"
+# The allowed MIME types for a file upload.
+allowed_mime_types = ["image/png", "image/jpeg", "image/gif", "image/webp"]
+# The image transformation engine enabled.
+image_transformation_enabled = true
+
+[auth]
+enabled = true
+# The base URL of your Next.js app. This is used to redirect users back to your app
+# after they sign in or sign out.
+site_url = "http://localhost:3000"
+# A list of origins that are allowed to access the Auth API.
+additional_redirect_urls = ["https://localhost:3000"]
+# The JWT secret used by the Auth server. You can generate a new secret with the
+# `supabase generate jwt-secret` command.
+jwt_secret = "your-super-secret-jwt-token-with-at-least-32-characters-long"
+
+[functions]
+enabled = false
+
+[analytics]
+enabled = false

@@ -1,0 +1,130 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  password  String
+  role      UserRole @default(STUDENT)
+  isActive  Boolean  @map("is_active") @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  lastLogin DateTime? @map("last_login")
+
+  // Relations
+  profile        Profile?
+  enrolledCourses CourseEnrollment[]
+  createdCourses Course[]           @relation("CourseCreator")
+  certificates   Certificate[]
+
+  @@map("users")
+}
+
+model Profile {
+  id       String  @id @default(cuid())
+  userId   String  @unique
+  user     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  avatar   String?
+  bio      String?
+  location String?
+  phone    String?
+  website  String?
+
+  @@map("profiles")
+}
+
+model Course {
+  id          String        @id @default(cuid())
+  title       String
+  description String
+  content     String?
+  thumbnail   String?
+  price       Float         @default(0)
+  level       CourseLevel   @default(BEGINNER)
+  category    String
+  status      CourseStatus  @default(DRAFT)
+  duration    Int?          // en minutes
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  // Relations
+  creatorId   String
+  creator     User          @relation("CourseCreator", fields: [creatorId], references: [id])
+  enrollments CourseEnrollment[]
+  lessons     Lesson[]
+  certificates Certificate[]
+
+  @@map("courses")
+}
+
+model Lesson {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  videoUrl  String?
+  duration  Int?     // en minutes
+  order     Int
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("lessons")
+}
+
+model CourseEnrollment {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  enrolledAt DateTime @default(now())
+  completedAt DateTime?
+  progress  Int      @default(0) // pourcentage de completion
+
+  @@unique([userId, courseId])
+  @@map("course_enrollments")
+}
+
+model Certificate {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  issuedAt  DateTime @default(now())
+  certificateUrl String?
+
+  @@unique([userId, courseId])
+  @@map("certificates")
+}
+
+// Enums pour PostgreSQL
+enum UserRole {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
+
+enum CourseLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
