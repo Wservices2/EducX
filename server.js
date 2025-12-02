@@ -66,8 +66,7 @@ const authenticateToken = async (req, res, next) => {
 
 // Validation schemas
 const registerSchema = Joi.object({
-  firstName: Joi.string().min(2).max(50).required(),
-  lastName: Joi.string().min(2).max(50).required(),
+  fullName: Joi.string().min(2).max(50).required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required()
 });
@@ -97,7 +96,7 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { firstName, lastName, email, password } = value;
+    const { fullName, email, password } = value;
 
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await prisma.user.findUnique({
@@ -109,6 +108,11 @@ app.post('/api/auth/register', async (req, res) => {
         message: 'Un compte avec cet email existe déjà'
       });
     }
+
+    // Séparer le nom complet en prénom et nom
+    const nameParts = fullName.trim().split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ') || '';
 
     // Hasher le mot de passe
     const hashedPassword = await bcrypt.hash(password, 12);
