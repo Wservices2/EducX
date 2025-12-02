@@ -386,4 +386,8 @@ process.on('SIGTERM', async () => {
 });
 
 // Démarrer le serveur
-startServer();
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = app;
