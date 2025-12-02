@@ -92,9 +92,12 @@ router.post('/register', validateData(registerSchema), asyncHandler(async (req, 
   };
 
   res.status(201).json({
+    success: true,
     message: 'Compte créé avec succès',
-    token,
-    user: userResponse
+    data: {
+      token,
+      user: userResponse
+    }
   });
 }));
 
@@ -106,7 +109,7 @@ router.post('/login', validateData(loginSchema), asyncHandler(async (req, res) =
   const user = await prisma.user.findUnique({
     where: { email: email.toLowerCase() }
   });
-  
+
   if (!user) {
     return res.status(401).json({
       message: 'Email ou mot de passe incorrect'
@@ -122,7 +125,7 @@ router.post('/login', validateData(loginSchema), asyncHandler(async (req, res) =
 
   // Vérifier le mot de passe
   const isPasswordValid = await bcrypt.compare(password, user.password);
-  
+
   if (!isPasswordValid) {
     return res.status(401).json({
       message: 'Email ou mot de passe incorrect'
@@ -150,9 +153,12 @@ router.post('/login', validateData(loginSchema), asyncHandler(async (req, res) =
   };
 
   res.json({
+    success: true,
     message: 'Connexion réussie',
-    token,
-    user: userResponse
+    data: {
+      token,
+      user: userResponse
+    }
   });
 }));
 
@@ -170,7 +176,7 @@ router.get('/profile', require('../middleware/auth').authenticateToken, asyncHan
       certificates: true
     }
   });
-  
+
   if (!user) {
     return res.status(404).json({
       message: 'Utilisateur non trouvé'
@@ -200,11 +206,11 @@ router.get('/profile', require('../middleware/auth').authenticateToken, asyncHan
 // Route pour mettre à jour le profil
 router.put('/profile', require('../middleware/auth').authenticateToken, asyncHandler(async (req, res) => {
   const { firstName, lastName, profile } = req.body;
-  
+
   const user = await prisma.user.findUnique({
     where: { id: req.user.id }
   });
-  
+
   if (!user) {
     return res.status(404).json({
       message: 'Utilisateur non trouvé'
