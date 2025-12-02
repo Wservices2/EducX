@@ -88,6 +88,15 @@ app.get('/api', (req, res) => {
   });
 });
 
+// Debug endpoint
+app.get('/api/debug', (req, res) => {
+  res.json({
+    message: 'API is working',
+    timestamp: new Date().toISOString(),
+    registerSchemaKeys: Object.keys(registerSchema.describe().keys)
+  });
+});
+
 // Route d'inscription
 app.post('/api/auth/register', async (req, res) => {
   try {
