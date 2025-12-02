@@ -1,0 +1,31 @@
+{
+  "short_name": "EducX",
+  "name": "EducX - Plateforme Éducative Béninoise",
+  "description": "Plateforme complète pour réussir aux collèges et aux lycées avec des contenus adaptés au programme béninois",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo192.svg",
+      "type": "image/svg+xml",
+      "sizes": "192x192"
+    },
+    {
+      "src": "logo512.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#1e40af",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "categories": ["education", "productivity"],
+  "lang": "fr",
+  "dir": "ltr"
+}
