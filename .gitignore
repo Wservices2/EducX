@@ -89,7 +89,7 @@ public/uploads/
 
 # Gatsby
 .cache/
-public/
+# public/ removed to allow client/public
 
 # Storybook
 .out/

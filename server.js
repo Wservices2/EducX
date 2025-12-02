@@ -82,7 +82,7 @@ const loginSchema = Joi.object({
 app.get('/api', (req, res) => {
   res.json({
     message: 'API EducX - Plateforme éducative béninoise',
-    version: '1.0.0',
+    version: '1.0.1',
     status: 'active',
     timestamp: new Date().toISOString()
   });
