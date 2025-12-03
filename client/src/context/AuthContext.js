@@ -65,11 +65,11 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify({ email, password }),
     });
 
-    if (result.success) {
-      setToken(result.data.token);
-      setUser(result.data.user);
-      localStorage.setItem('token', result.data.token);
-      localStorage.setItem('user', JSON.stringify(result.data.user));
+    if (result.success && result.data.success) {
+      setToken(result.data.data.token);
+      setUser(result.data.data.user);
+      localStorage.setItem('token', result.data.data.token);
+      localStorage.setItem('user', JSON.stringify(result.data.data.user));
     }
 
     return result;
@@ -83,11 +83,11 @@ export const AuthProvider = ({ children }) => {
       body: JSON.stringify(userData),
     });
 
-    if (result.success) {
-      setToken(result.data.token);
-      setUser(result.data.user);
-      localStorage.setItem('token', result.data.token);
-      localStorage.setItem('user', JSON.stringify(result.data.user));
+    if (result.success && result.data.success) {
+      setToken(result.data.data.token);
+      setUser(result.data.data.user);
+      localStorage.setItem('token', result.data.data.token);
+      localStorage.setItem('user', JSON.stringify(result.data.data.user));
     }
 
     return result;
