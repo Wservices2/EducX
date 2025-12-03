@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { 
-  FiBookOpen, FiAward, FiClock, FiTrendingUp, FiPlay, FiStar, 
+import { useNavigate } from 'react-router-dom';
+import {
+  FiBookOpen, FiAward, FiClock, FiTrendingUp, FiPlay, FiStar,
   FiUsers, FiCalendar, FiTarget, FiCheckCircle, FiMail, FiHome,
   FiCreditCard, FiUser, FiBell, FiSettings, FiLogOut, FiHeart,
   FiZap, FiShield, FiGift, FiSun, FiArrowRight, FiBarChart,
@@ -313,38 +314,6 @@ const ProgressBar = styled.div`
 const ProgressFill = styled.div`
   height: 100%;
   background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-  border-radius: 4px;
-  transition: width 0.8s ease;
-  width: ${props => props.width || '0%'};
-`;
-
-const Dashboard = () => {
-  const { user } = useAuth();
-  const [stats, setStats] = useState({
-    coursesCompleted: 12,
-    hoursLearned: 45,
-    certificates: 3,
-    streak: 7
-  });
-
-  const [notifications, setNotifications] = useState([
-    { id: 1, title: 'Nouveau cours disponible', time: 'Il y a 2h', icon: FiBookOpen },
-    { id: 2, title: 'Certificat obtenu', time: 'Il y a 1 jour', icon: FiAward },
-    { id: 3, title: 'Rappel de cours', time: 'Il y a 2 jours', icon: FiClock }
-  ]);
-
-  const quickActions = [
-    { title: 'Continuer', subtitle: 'Mes cours', icon: FiPlay, color: '#10b981', bgColor: '#10b981' },
-    { title: 'Explorer', subtitle: 'Nouveaux cours', icon: FiBookOpen, color: '#3b82f6', bgColor: '#3b82f6' },
-    { title: 'Profil', subtitle: 'Mon compte', icon: FiUser, color: '#8b5cf6', bgColor: '#8b5cf6' },
-    { title: 'Paramètres', subtitle: 'Configuration', icon: FiSettings, color: '#f59e0b', bgColor: '#f59e0b' }
-  ];
-
-  const progressData = [
-    { label: 'Mathématiques', percent: 75 },
-    { label: 'Français', percent: 60 },
-    { label: 'Sciences', percent: 45 }
-  ];
 
   return (
     <ResponsiveNavigation>
@@ -404,29 +373,6 @@ const Dashboard = () => {
           </Header>
 
           <ContentGrid>
-            <QuickActions>
-              <SectionTitle>
-                <FiZap />
-                Actions rapides
-              </SectionTitle>
-              <ActionsGrid>
-                {quickActions.map((action, index) => (
-                  <ActionItem key={index}>
-                    <ActionIcon bgColor={action.bgColor}>
-                      <action.icon />
-                    </ActionIcon>
-                    <ActionText>
-                      <ActionTitle>{action.title}</ActionTitle>
-                      <ActionSubtitle>{action.subtitle}</ActionSubtitle>
-                    </ActionText>
-                    <FiChevronRight color="#9ca3af" />
-                  </ActionItem>
-                ))}
-              </ActionsGrid>
-            </QuickActions>
-
-            <RecentActivity>
-              <SectionTitle>
                 <FiBell />
                 Activité récente
               </SectionTitle>
@@ -458,7 +404,7 @@ const Dashboard = () => {
                   <ProgressPercent>{item.percent}%</ProgressPercent>
                 </ProgressHeader>
                 <ProgressBar>
-                  <ProgressFill width={`${item.percent}%`} />
+                  <ProgressFill width={`${ item.percent }% `} />
                 </ProgressBar>
               </ProgressItem>
             ))}
