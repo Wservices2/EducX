@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiLogIn, FiUser } from 'react-icons/fi';
 import { API_CONFIG } from '../config';
+import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -332,12 +333,13 @@ const SocialButton = styled.button`
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     rememberMe: false
   });
-  
+
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -377,35 +379,19 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
+
     try {
-      const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.AUTH.LOGIN}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        }),
-      });
+      const result = await login(formData.email, formData.password);
 
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        // Login successful
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('user', JSON.stringify(data.data.user));
-        console.log('Login successful:', data);
-        // Redirect to dashboard using React Router
+      if (result.success) {
+        console.log('Login successful:', result.data);
         navigate('/dashboard');
       } else {
-        // Handle login error
-        setErrors({ general: data.message || 'Email ou mot de passe incorrect' });
+        setErrors({ general: result.error || 'Email ou mot de passe incorrect' });
       }
     } catch (error) {
       console.error('Login error:', error);
