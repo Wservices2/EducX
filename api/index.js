@@ -9,7 +9,24 @@ const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 
 const app = express();
-const prisma = new PrismaClient();
+
+// Configure Prisma for serverless
+const prisma = new PrismaClient({
+    datasources: {
+        db: {
+            url: process.env.DATABASE_URL,
+        },
+    },
+    log: ['error', 'warn'],
+});
+
+// Ensure Prisma connects properly in serverless
+prisma.$connect().catch(err => {
+    console.error('Prisma connection error:', err);
+});
+
+// Trust proxy for Vercel
+app.set('trust proxy', 1);
 
 // Middleware de sécurité
 app.use(helmet({
