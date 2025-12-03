@@ -16,7 +16,7 @@ model User {
   firstName String   @map("first_name")
   lastName  String   @map("last_name")
   password  String
-  role      UserRole @default(STUDENT)
+  role      String   @default("STUDENT")
   isActive  Boolean  @map("is_active") @default(true)
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -51,9 +51,9 @@ model Course {
   content     String?
   thumbnail   String?
   price       Float         @default(0)
-  level       CourseLevel   @default(BEGINNER)
+  level       String        @default("BEGINNER")
   category    String
-  status      CourseStatus  @default(DRAFT)
+  status      String        @default("DRAFT")
   duration    Int?          // en minutes
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
@@ -110,21 +110,4 @@ model Certificate {
   @@map("certificates")
 }
 
-// Enums pour PostgreSQL
-enum UserRole {
-  STUDENT
-  INSTRUCTOR
-  ADMIN
-}
-
-enum CourseLevel {
-  BEGINNER
-  INTERMEDIATE
-  ADVANCED
-}
-
-enum CourseStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-}
+// Enums removed - using String type for Neon compatibility
