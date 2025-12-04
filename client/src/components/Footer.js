@@ -147,7 +147,7 @@ const Footer = () => {
         </FooterGrid>
 
         <FooterBottom>
-          <p>&copy; 2025 EducX. Tous droits réservés.</p>
+          <p>&copy; 2024 EducX. Tous droits réservés.</p>
         </FooterBottom>
       </FooterContent>
     </FooterContainer>
