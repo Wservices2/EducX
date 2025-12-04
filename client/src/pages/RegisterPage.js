@@ -247,6 +247,34 @@ const LoginLink = styled(Link)`
   }
 `;
 
+const RegisterPrompt = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+`;
+
+const RegisterText = styled.span`
+  color: #6b7280;
+  font-size: 14px;
+  margin-right: 8px;
+`;
+
+const RegisterLink = styled(Link)`
+  color: #1e40af;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+  }
+`;
+
 const SubmitButton = styled(motion.button)`
   background: linear-gradient(135deg, #1e40af, #3b82f6);
   color: white;
