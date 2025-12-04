@@ -13,12 +13,12 @@ const DashboardContainer = styled.div`
 `;
 
 const MainContent = styled.div`
-  padding: clamp(20px, 5vw, 32px);
+  padding: clamp(24px, 6vw, 40px);
   max-width: 1400px;
   margin: 0 auto;
 
   @media (max-width: 480px) {
-    padding: 20px 15px;
+    padding: 24px 20px;
   }
 `;
 
@@ -33,16 +33,16 @@ const Header = styled.div`
 const WelcomeCard = styled.div`
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: clamp(16px, 4vw, 24px);
-  padding: clamp(25px, 6vw, 40px);
+  padding: clamp(28px, 7vw, 48px);
   color: white;
   position: relative;
   overflow: hidden;
-  margin-bottom: clamp(25px, 6vw, 32px);
+  margin-bottom: clamp(28px, 7vw, 40px);
 
   @media (max-width: 480px) {
-    padding: 25px 20px;
+    padding: 28px 24px;
     border-radius: 16px;
-    margin-bottom: 25px;
+    margin-bottom: 28px;
   }
 
   &::before {
@@ -194,55 +194,55 @@ const SectionTitle = styled.h2`
   }
 `;
 
-const ActionsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-`;
+// const ActionsGrid = styled.div`
+//   display: grid;
+//   grid-template-columns: repeat(2, 1fr);
+//   gap: 16px;
+// `;
 
-const ActionItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 20px;
-  border-radius: 12px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  cursor: pointer;
-  transition: all 0.2s ease;
+// const ActionItem = styled.div`
+//   display: flex;
+//   align-items: center;
+//   gap: 16px;
+//   padding: 20px;
+//   border-radius: 12px;
+//   background: #f9fafb;
+//   border: 1px solid #e5e7eb;
+//   cursor: pointer;
+//   transition: all 0.2s ease;
 
-  &:hover {
-    background: #f3f4f6;
-    transform: translateY(-1px);
-  }
-`;
+//   &:hover {
+//     background: #f3f4f6;
+//     transform: translateY(-1px);
+//   }
+// `;
 
-const ActionIcon = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  background: ${props => props.bgColor || '#667eea'};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 20px;
-`;
+// const ActionIcon = styled.div`
+//   width: 40px;
+//   height: 40px;
+//   border-radius: 10px;
+//   background: ${props => props.bgColor || '#667eea'};
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   color: white;
+//   font-size: 20px;
+// `;
 
-const ActionText = styled.div`
-  flex: 1;
-`;
+// const ActionText = styled.div`
+//   flex: 1;
+// `;
 
-const ActionTitle = styled.div`
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 4px;
-`;
+// const ActionTitle = styled.div`
+//   font-weight: 600;
+//   color: #1f2937;
+//   margin-bottom: 4px;
+// `;
 
-const ActionSubtitle = styled.div`
-  font-size: 0.875rem;
-  color: #6b7280;
-`;
+// const ActionSubtitle = styled.div`
+//   font-size: 0.875rem;
+//   color: #6b7280;
+// `;
 
 const RecentActivity = styled.div`
   background: white;

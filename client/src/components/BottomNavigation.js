@@ -12,13 +12,17 @@ const BottomNavContainer = styled(motion.div)`
   background: linear-gradient(135deg, #FFFFFF 0%, #EDF6F6 100%);
   backdrop-filter: blur(30px);
   border-top: 2px solid #072FA6;
-  padding: 16px 20px 24px;
+  padding: clamp(12px, 3vw, 16px) clamp(15px, 4vw, 20px) clamp(18px, 4vw, 24px);
   z-index: 1000;
   display: none;
   box-shadow: 0 -10px 40px rgba(7, 47, 166, 0.15);
 
   @media (max-width: 768px) {
     display: block;
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px 15px 18px;
   }
 `;
 
@@ -29,20 +33,31 @@ const NavItems = styled.div`
   max-width: 400px;
   margin: 0 auto;
   position: relative;
+  gap: clamp(4px, 1vw, 8px);
+
+  @media (max-width: 480px) {
+    gap: 4px;
+  }
 `;
 
 const NavItem = styled(Link)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 16px 12px;
-  border-radius: 20px;
+  gap: clamp(4px, 1vw, 8px);
+  padding: clamp(12px, 3vw, 16px) clamp(8px, 2vw, 12px);
+  border-radius: clamp(16px, 4vw, 20px);
   text-decoration: none;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
-  min-width: 70px;
+  min-width: clamp(60px, 15vw, 70px);
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    padding: 12px 8px;
+    border-radius: 16px;
+    min-width: 60px;
+  }
 
   ${props => props.$isActive && `
     background: linear-gradient(135deg, #072FA6 0%, #9E07A6 100%);
@@ -93,10 +108,16 @@ const IconContainer = styled(motion.div)`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
-  height: 50px;
-  border-radius: 15px;
+  width: clamp(40px, 10vw, 50px);
+  height: clamp(40px, 10vw, 50px);
+  border-radius: clamp(12px, 3vw, 15px);
   transition: all 0.3s ease;
+
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
 
   ${props => props.$isActive && `
     background: rgba(255, 255, 255, 0.2);
@@ -109,10 +130,14 @@ const IconContainer = styled(motion.div)`
 `;
 
 const NavIcon = styled.div`
-  font-size: 24px;
+  font-size: clamp(18px, 5vw, 24px);
   color: ${props => props.$isActive ? '#FFFFFF' : '#434040'};
   transition: all 0.3s ease;
   position: relative;
+
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
 
   ${props => props.$isActive && `
     color: #FFFFFF;
@@ -121,7 +146,7 @@ const NavIcon = styled.div`
 `;
 
 const NavLabel = styled.span`
-  font-size: 12px;
+  font-size: clamp(10px, 3vw, 12px);
   font-weight: 600;
   color: ${props => props.$isActive ? '#FFFFFF' : '#434040'};
   transition: all 0.3s ease;
@@ -129,6 +154,10 @@ const NavLabel = styled.span`
   z-index: 2;
   text-align: center;
   line-height: 1.2;
+
+  @media (max-width: 480px) {
+    font-size: 10px;
+  }
 
   ${props => props.$isActive && `
     color: #FFFFFF;
