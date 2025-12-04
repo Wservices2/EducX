@@ -262,12 +262,13 @@ const RegisterText = styled.span`
   margin-right: 8px;
 `;
 
-const RegisterLink = styled(Link)`
+const RegisterLink = styled.span`
   color: #1e40af;
   text-decoration: none;
   font-weight: 600;
   font-size: 14px;
   transition: color 0.3s ease;
+  cursor: pointer;
 
   &:hover {
     color: #1d4ed8;
@@ -666,9 +667,7 @@ const RegisterPage = () => {
 
             <RegisterPrompt>
               <RegisterText>Déjà un compte ?</RegisterText>
-              <Link to="/login">
-                <RegisterLink>Se connecter</RegisterLink>
-              </Link>
+              <RegisterLink onClick={() => navigate('/login')}>Se connecter</RegisterLink>
             </RegisterPrompt>
 
             <TermsText>
