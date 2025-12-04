@@ -7,25 +7,25 @@ import ResponsiveNavigation from '../components/ResponsiveNavigation';
 const CoursesContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  padding: clamp(15px, 4vw, 20px);
+  padding: clamp(20px, 5vw, 24px);
   padding-bottom: clamp(80px, 15vw, 100px);
 
   @media (min-width: 769px) {
-    padding: clamp(30px, 6vw, 40px);
+    padding: clamp(32px, 7vw, 48px);
     padding-bottom: 0;
   }
 `;
 
 const Header = styled.div`
   background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-  margin: calc(-1 * clamp(15px, 4vw, 20px)) calc(-1 * clamp(15px, 4vw, 20px)) clamp(25px, 6vw, 30px);
-  padding: clamp(30px, 8vw, 40px) clamp(15px, 4vw, 20px);
+  margin: calc(-1 * clamp(20px, 5vw, 24px)) calc(-1 * clamp(20px, 5vw, 24px)) clamp(28px, 7vw, 32px);
+  padding: clamp(32px, 8vw, 48px) clamp(20px, 5vw, 24px);
   color: white;
   border-radius: 0 0 clamp(20px, 5vw, 24px) clamp(20px, 5vw, 24px);
 
   @media (min-width: 769px) {
-    margin: calc(-1 * clamp(30px, 6vw, 40px)) calc(-1 * clamp(30px, 6vw, 40px)) clamp(35px, 8vw, 40px);
-    padding: clamp(50px, 10vw, 60px) clamp(30px, 6vw, 40px);
+    margin: calc(-1 * clamp(32px, 7vw, 48px)) calc(-1 * clamp(32px, 7vw, 48px)) clamp(40px, 9vw, 48px);
+    padding: clamp(56px, 11vw, 64px) clamp(32px, 7vw, 48px);
     border-radius: 0 0 clamp(24px, 6vw, 32px) clamp(24px, 6vw, 32px);
   }
 `;
@@ -47,7 +47,7 @@ const HeaderSubtitle = styled.p`
 
 const CoursesGrid = styled.div`
   display: grid;
-  gap: clamp(16px, 4vw, 20px);
+  gap: clamp(20px, 5vw, 24px);
   max-width: 1200px;
   margin: 0 auto;
 

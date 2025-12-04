@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiLogIn, FiUser } from 'react-icons/fi';
-import { API_CONFIG } from '../config';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -20,17 +19,17 @@ const MainContent = styled.main`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(20px, 5vw, 40px) clamp(15px, 4vw, 20px);
+  padding: clamp(24px, 6vw, 48px) clamp(20px, 5vw, 32px);
 
   @media (max-width: 480px) {
-    padding: 20px 15px;
+    padding: 24px 20px;
   }
 `;
 
 const LoginCard = styled(motion.div)`
   background: white;
   border-radius: clamp(16px, 4vw, 24px);
-  padding: clamp(30px, 6vw, 50px);
+  padding: clamp(32px, 7vw, 56px);
   width: 100%;
   max-width: 450px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
@@ -39,7 +38,7 @@ const LoginCard = styled(motion.div)`
 
   @media (max-width: 480px) {
     max-width: 100%;
-    padding: 30px 20px;
+    padding: 32px 24px;
     border-radius: 16px;
   }
 
@@ -288,40 +287,68 @@ const RegisterPrompt = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 30px;
-  padding-top: 30px;
+  margin-top: clamp(20px, 5vw, 30px);
+  padding-top: clamp(20px, 5vw, 30px);
   border-top: 1px solid #e5e7eb;
-  gap: 8px;
+  gap: clamp(6px, 2vw, 8px);
+
+  @media (max-width: 480px) {
+    margin-top: 20px;
+    padding-top: 20px;
+    gap: 6px;
+  }
 `;
 
 const RegisterText = styled.span`
   color: #6b7280;
-  font-size: 14px;
+  font-size: clamp(13px, 3.5vw, 14px);
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `;
 
 const RegisterLink = styled(Link)`
   color: #1e40af;
   text-decoration: none;
   font-weight: 600;
-  font-size: 14px;
+  font-size: clamp(13px, 3.5vw, 14px);
   transition: color 0.3s ease;
+  padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 12px);
+  border-radius: 6px;
+  background: rgba(30, 64, 175, 0.05);
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+    padding: 4px 8px;
+  }
 
   &:hover {
     color: #1d4ed8;
     text-decoration: underline;
+    background: rgba(30, 64, 175, 0.1);
   }
 `;
 
 const SocialLogin = styled.div`
-  margin-top: 30px;
+  margin-top: clamp(20px, 5vw, 30px);
+
+  @media (max-width: 480px) {
+    margin-top: 20px;
+  }
 `;
 
 const SocialTitle = styled.div`
   text-align: center;
-  font-size: 14px;
+  font-size: clamp(13px, 3.5vw, 14px);
   color: #6b7280;
-  margin-bottom: 20px;
+  margin-bottom: clamp(16px, 4vw, 20px);
   position: relative;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
 
   &::before {
     content: '';
@@ -336,37 +363,53 @@ const SocialTitle = styled.div`
 
   span {
     background: white;
-    padding: 0 20px;
+    padding: 0 clamp(16px, 4vw, 20px);
     position: relative;
     z-index: 2;
+
+    @media (max-width: 480px) {
+      padding: 0 16px;
+    }
   }
 `;
 
 const SocialButtons = styled.div`
   display: flex;
-  gap: 12px;
+  gap: clamp(10px, 3vw, 12px);
+
+  @media (max-width: 480px) {
+    gap: 10px;
+  }
 `;
 
 const SocialButton = styled.button`
   flex: 1;
-  padding: 12px;
+  padding: clamp(10px, 3vw, 12px);
   border: 2px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: clamp(8px, 2vw, 12px);
   background: white;
   color: #6b7280;
-  font-size: 14px;
+  font-size: clamp(13px, 3.5vw, 14px);
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: clamp(6px, 2vw, 8px);
+
+  @media (max-width: 480px) {
+    padding: 10px;
+    font-size: 13px;
+    border-radius: 8px;
+    gap: 6px;
+  }
 
   &:hover {
     border-color: #1e40af;
     color: #1e40af;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 64, 175, 0.15);
   }
 `;
 

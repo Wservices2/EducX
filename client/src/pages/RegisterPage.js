@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
-import { API_CONFIG } from '../config';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -19,17 +18,17 @@ const MainContent = styled.main`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(20px, 5vw, 40px) clamp(15px, 4vw, 20px);
+  padding: clamp(24px, 6vw, 48px) clamp(20px, 5vw, 32px);
 
   @media (max-width: 480px) {
-    padding: 20px 15px;
+    padding: 24px 20px;
   }
 `;
 
 const RegisterCard = styled(motion.div)`
   background: white;
   border-radius: clamp(16px, 4vw, 24px);
-  padding: clamp(30px, 6vw, 50px);
+  padding: clamp(32px, 7vw, 56px);
   width: 100%;
   max-width: 500px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
@@ -38,7 +37,7 @@ const RegisterCard = styled(motion.div)`
 
   @media (max-width: 480px) {
     max-width: 100%;
-    padding: 30px 20px;
+    padding: 32px 24px;
     border-radius: 16px;
   }
 
@@ -363,36 +362,36 @@ const RegisterPage = () => {
   };
 
   const validateForm = () => {
-    const newErrors = {};
+    const newError = {};
 
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'Le prénom est requis';
+      newError.firstName = 'Le prénom est requis';
     }
 
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Le nom est requis';
+      newError.lastName = 'Le nom est requis';
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'L\'adresse email est requise';
+      newError.email = 'L\'adresse email est requise';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Veuillez entrer une adresse email valide';
+      newError.email = 'Veuillez entrer une adresse email valide';
     }
 
     if (!formData.password) {
-      newErrors.password = 'Le mot de passe est requis';
+      newError.password = 'Le mot de passe est requis';
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Le mot de passe doit contenir au moins 8 caractères';
+      newError.password = 'Le mot de passe doit contenir au moins 8 caractères';
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Veuillez confirmer votre mot de passe';
+      newError.confirmPassword = 'Veuillez confirmer votre mot de passe';
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Les mots de passe ne correspondent pas';
+      newError.confirmPassword = 'Les mots de passe ne correspondent pas';
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    setErrors(newError);
+    return Object.keys(newError).length === 0;
   };
 
   const handleSubmit = async (e) => {
@@ -403,10 +402,7 @@ const RegisterPage = () => {
     setIsLoading(true);
     
     try {
-      // Préparer les données sans confirmPassword
-      const { confirmPassword, ...dataToSend } = formData;
-      
-      const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.AUTH.REGISTER}`, {
+      const response = await fetch('http://localhost:5000/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -640,15 +636,17 @@ const RegisterPage = () => {
               )}
             </SubmitButton>
 
-            <LoginPrompt>
-              <LoginText>Déjà un compte ?</LoginText>
-              <LoginLink to="/login">Se connecter</LoginLink>
-            </LoginPrompt>
+            <RegisterPrompt>
+              <RegisterText>Déjà un compte ?</RegisterText>
+              <Link to="/login">
+                <RegisterLink>Se connecter</RegisterLink>
+              </Link>
+            </RegisterPrompt>
 
             <TermsText>
               En créant un compte, vous acceptez nos{' '}
-              <a href="#">Conditions d'utilisation</a> et notre{' '}
-              <a href="#">Politique de confidentialité</a>
+              <Link to="/conditions-d-utilisation">Conditions d'utilisation</Link> et notre{' '}
+              <Link to="/politique-de-confidentialite">Politique de confidentialité</Link>
             </TermsText>
           </Form>
         </RegisterCard>

@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FiBookOpen, FiPlay, FiClock, FiUsers, FiAward, FiTarget, 
-  FiTrendingUp, FiCalendar, FiChevronRight, FiChevronLeft,
-  FiStar, FiZap, FiShield, FiGift, FiSun, FiArrowRight,
-  FiCheckCircle, FiPlus, FiSearch, FiFilter, FiGrid, FiList,
-  FiMap, FiMessageCircle
+  FiBookOpen, FiPlay, FiTarget, FiChevronRight, FiChevronLeft,
+  FiZap, FiShield, FiPlus, FiMap, FiMessageCircle
 } from 'react-icons/fi';
 import ResponsiveNavigation from '../components/ResponsiveNavigation';
 
@@ -32,48 +29,70 @@ const ClassroomContainer = styled.div`
 `;
 
 const MainContent = styled.div`
-  padding: 32px;
+  padding: clamp(24px, 6vw, 40px);
   max-width: 1400px;
   margin: 0 auto;
   position: relative;
   z-index: 2;
+
+  @media (max-width: 480px) {
+    padding: 24px 20px;
+  }
 `;
 
 const Header = styled.div`
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: clamp(30px, 8vw, 48px);
   color: white;
+
+  @media (max-width: 480px) {
+    margin-bottom: 30px;
+  }
 `;
 
 const Title = styled(motion.h1)`
-  font-size: 3rem;
+  font-size: clamp(28px, 7vw, 3rem);
   font-weight: 800;
-  margin: 0 0 16px 0;
+  margin: 0 0 clamp(12px, 3vw, 16px) 0;
   background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  @media (max-width: 480px) {
+    font-size: 32px;
+  }
 `;
 
 const Subtitle = styled(motion.p)`
-  font-size: 1.25rem;
+  font-size: clamp(16px, 4vw, 1.25rem);
   opacity: 0.9;
   margin: 0;
   font-weight: 400;
+
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
 `;
 
 // Section Nouveau Cours
 const NewCourseSection = styled.div`
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(20px);
-  border-radius: 32px;
-  padding: 48px;
-  margin-bottom: 48px;
+  border-radius: clamp(20px, 5vw, 32px);
+  padding: clamp(28px, 7vw, 48px);
+  margin-bottom: clamp(32px, 8vw, 48px);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    padding: 28px 24px;
+    border-radius: 20px;
+    margin-bottom: 32px;
+  }
 
   &::before {
     content: '';
@@ -81,47 +100,69 @@ const NewCourseSection = styled.div`
     top: 0;
     left: 0;
     right: 0;
-    height: 6px;
+    height: 4px;
     background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   }
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2rem;
+  font-size: clamp(24px, 6vw, 2rem);
   font-weight: 700;
   color: #1f2937;
-  margin: 0 0 8px 0;
+  margin: 0 0 clamp(6px, 2vw, 8px) 0;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: clamp(12px, 3vw, 16px);
+
+  @media (max-width: 480px) {
+    font-size: 24px;
+    gap: 12px;
+  }
 
   svg {
     color: #667eea;
-    font-size: 2.5rem;
+    font-size: clamp(24px, 6vw, 2.5rem);
+
+    @media (max-width: 480px) {
+      font-size: 24px;
+    }
   }
 `;
 
 const SectionDescription = styled.p`
-  font-size: 1.1rem;
+  font-size: clamp(14px, 3.5vw, 1.1rem);
   color: #6b7280;
-  margin: 0 0 32px 0;
+  margin: 0 0 clamp(24px, 6vw, 32px) 0;
+
+  @media (max-width: 480px) {
+    font-size: 15px;
+    margin-bottom: 24px;
+  }
 `;
 
 const StartButton = styled(motion.button)`
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
-  border-radius: 16px;
-  padding: 20px 40px;
-  font-size: 1.25rem;
+  border-radius: clamp(12px, 3vw, 16px);
+  padding: clamp(16px, 4vw, 20px) clamp(24px, 6vw, 40px);
+  font-size: clamp(16px, 4vw, 1.25rem);
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: clamp(8px, 2vw, 12px);
   box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
   transition: all 0.3s ease;
-  margin-bottom: 32px;
+  margin-bottom: clamp(24px, 6vw, 32px);
+
+  @media (max-width: 480px) {
+    padding: 16px 24px;
+    font-size: 16px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    gap: 8px;
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -131,22 +172,33 @@ const StartButton = styled(motion.button)`
 
 const SelectionContainer = styled(motion.div)`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
+  gap: clamp(12px, 3vw, 20px);
+  margin-bottom: clamp(24px, 6vw, 32px);
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
 `;
 
 const SelectionCard = styled(motion.div)`
   background: ${props => props.selected ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'white'};
   color: ${props => props.selected ? 'white' : '#374151'};
   border: 2px solid ${props => props.selected ? 'transparent' : '#e5e7eb'};
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: clamp(12px, 3vw, 16px);
+  padding: clamp(16px, 4vw, 24px);
   cursor: pointer;
   transition: all 0.3s ease;
   text-align: center;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    padding: 16px 12px;
+    border-radius: 12px;
+  }
 
   &:hover {
     transform: translateY(-4px);
@@ -168,37 +220,40 @@ const SelectionCard = styled(motion.div)`
 `;
 
 const SelectionTitle = styled.h3`
-  font-size: 1.25rem;
+  font-size: clamp(16px, 4vw, 1.25rem);
   font-weight: 600;
-  margin: 0 0 8px 0;
+  margin: 0 0 clamp(6px, 2vw, 8px) 0;
   position: relative;
   z-index: 2;
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
 `;
 
 const SelectionSubtitle = styled.p`
-  font-size: 0.875rem;
+  font-size: clamp(12px, 3vw, 0.875rem);
   opacity: 0.8;
   margin: 0;
   position: relative;
   z-index: 2;
-`;
 
-const SubjectGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  margin-top: 32px;
 `;
 
 const SubjectCard = styled(motion.div)`
   background: white;
   border: 2px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: clamp(12px, 3vw, 16px);
+  padding: clamp(20px, 5vw, 24px);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
 
   &:hover {
     transform: translateY(-4px);
@@ -224,77 +279,100 @@ const SubjectCard = styled(motion.div)`
 `;
 
 const SubjectIcon = styled.div`
-  width: 60px;
-  height: 60px;
-  border-radius: 16px;
+  width: clamp(48px, 12vw, 60px);
+  height: clamp(48px, 12vw, 60px);
+  border-radius: clamp(12px, 3vw, 16px);
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 24px;
-  margin-bottom: 16px;
+  font-size: clamp(20px, 5vw, 24px);
+  margin-bottom: clamp(12px, 3vw, 16px);
+
+  @media (max-width: 480px) {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
 `;
 
 const SubjectTitle = styled.h4`
-  font-size: 1.125rem;
+  font-size: clamp(16px, 4vw, 1.125rem);
   font-weight: 600;
   color: #1f2937;
-  margin: 0 0 8px 0;
+  margin: 0 0 clamp(6px, 2vw, 8px) 0;
+
+  @media (max-width: 480px) {
+    font-size: 16px;
+  }
 `;
 
 const SubjectDescription = styled.p`
-  font-size: 0.875rem;
+  font-size: clamp(13px, 3.5vw, 0.875rem);
   color: #6b7280;
-  margin: 0 0 16px 0;
+  margin: 0 0 clamp(12px, 3vw, 16px) 0;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+    margin-bottom: 12px;
+  }
 `;
 
 const SubjectStats = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.875rem;
+  font-size: clamp(13px, 3.5vw, 0.875rem);
   color: #6b7280;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `;
 
-// Section Mes Cours
-const MyCoursesSection = styled.div`
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border-radius: 32px;
-  padding: 48px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  position: relative;
-  overflow: hidden;
+const SubjectGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+  gap: clamp(12px, 3vw, 20px);
+  margin-top: clamp(24px, 6vw, 32px);
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 6px;
-    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 24px;
   }
 `;
 
 const CourseGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  margin-top: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: clamp(16px, 4vw, 24px);
+  margin-top: clamp(24px, 6vw, 32px);
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 24px;
+  }
 `;
 
 const CourseCard = styled(motion.div)`
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 20px;
-  padding: 32px;
+  border-radius: clamp(16px, 4vw, 20px);
+  padding: clamp(24px, 6vw, 32px);
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    padding: 24px 20px;
+    border-radius: 16px;
+  }
 
   &:hover {
     transform: translateY(-6px);
@@ -317,70 +395,130 @@ const CourseHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: clamp(16px, 4vw, 20px);
+
+  @media (max-width: 480px) {
+    margin-bottom: 16px;
+  }
 `;
 
 const CourseIcon = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
+  width: clamp(40px, 10vw, 50px);
+  height: clamp(40px, 10vw, 50px);
+  border-radius: clamp(10px, 3vw, 12px);
   background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 20px;
+  font-size: clamp(16px, 4vw, 20px);
+
+  @media (max-width: 480px) {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 16px;
+  }
 `;
 
 const CourseProgress = styled.div`
-  font-size: 0.875rem;
+  font-size: clamp(13px, 3.5vw, 0.875rem);
   color: #10b981;
   font-weight: 600;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `;
 
 const CourseTitle = styled.h3`
-  font-size: 1.25rem;
+  font-size: clamp(18px, 4.5vw, 1.25rem);
   font-weight: 600;
   color: #1f2937;
-  margin: 0 0 8px 0;
+  margin: 0 0 clamp(6px, 2vw, 8px) 0;
+
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
 `;
 
 const CourseDescription = styled.p`
-  font-size: 0.875rem;
+  font-size: clamp(13px, 3.5vw, 0.875rem);
   color: #6b7280;
-  margin: 0 0 20px 0;
+  margin: 0 0 clamp(16px, 4vw, 20px) 0;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+    margin-bottom: 16px;
+  }
 `;
 
 const CourseStats = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.875rem;
+  font-size: clamp(13px, 3.5vw, 0.875rem);
   color: #6b7280;
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `;
 
 const ProgressBar = styled.div`
   width: 100%;
-  height: 6px;
+  height: clamp(4px, 1vw, 6px);
   background: #f3f4f6;
-  border-radius: 3px;
+  border-radius: clamp(2px, 0.5vw, 3px);
   overflow: hidden;
-  margin: 16px 0;
+  margin: clamp(12px, 3vw, 16px) 0;
+
+  @media (max-width: 480px) {
+    height: 4px;
+    border-radius: 2px;
+    margin: 12px 0;
+  }
 `;
 
 const ProgressFill = styled.div`
   height: 100%;
   background: linear-gradient(90deg, #10b981 0%, #059669 100%);
-  border-radius: 3px;
+  border-radius: clamp(2px, 0.5vw, 3px);
   transition: width 0.8s ease;
   width: ${props => props.width || '0%'};
+`;
+
+// Section Mes Cours
+const MyCoursesSection = styled.div`
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: clamp(20px, 5vw, 32px);
+  padding: clamp(28px, 7vw, 48px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 480px) {
+    padding: 28px 24px;
+    border-radius: 20px;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+  }
 `;
 
 const ClassroomPage = () => {
   const [showNewCourse, setShowNewCourse] = useState(false);
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedSeries, setSelectedSeries] = useState('');
-  const [selectedSubject, setSelectedSubject] = useState('');
 
   const classes = [
     { id: '6eme', name: '6ème', description: 'Première année du collège' },
@@ -448,24 +586,20 @@ const ClassroomPage = () => {
     setShowNewCourse(true);
     setSelectedClass('');
     setSelectedSeries('');
-    setSelectedSubject('');
   };
 
   const handleClassSelect = (classId) => {
     setSelectedClass(classId);
     setSelectedSeries('');
-    setSelectedSubject('');
   };
 
   const handleSeriesSelect = (seriesId) => {
     setSelectedSeries(seriesId);
-    setSelectedSubject('');
   };
 
-  const handleSubjectSelect = (subjectId) => {
-    setSelectedSubject(subjectId);
+  const handleSubjectSelect = () => {
     // Ici on pourrait rediriger vers la page des cours de cette matière
-    console.log('Cours sélectionnés:', { selectedClass, selectedSeries, subjectId });
+    console.log('Cours sélectionnés:', { selectedClass, selectedSeries });
   };
 
   return (
@@ -583,7 +717,7 @@ const ClassroomPage = () => {
                         {subjects.map((subject, index) => (
                           <SubjectCard
                             key={subject.id}
-                            onClick={() => handleSubjectSelect(subject.id)}
+                            onClick={handleSubjectSelect}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             initial={{ opacity: 0, y: 20 }}
