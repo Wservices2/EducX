@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import {
-  FiBookOpen, FiAward, FiClock, FiTrendingUp, FiPlay, FiStar,
-  FiUsers, FiCalendar, FiTarget, FiCheckCircle, FiMail, FiHome,
-  FiCreditCard, FiUser, FiBell, FiSettings, FiLogOut, FiHeart,
-  FiZap, FiShield, FiGift, FiSun, FiArrowRight, FiBarChart,
-  FiChevronRight, FiPlus, FiMoreHorizontal
+  FiBookOpen, FiAward, FiClock, FiTrendingUp, FiBell, FiZap, FiBarChart
 } from 'react-icons/fi';
 import ResponsiveNavigation from '../components/ResponsiveNavigation';
 
@@ -20,23 +13,37 @@ const DashboardContainer = styled.div`
 `;
 
 const MainContent = styled.div`
-  padding: 32px;
+  padding: clamp(20px, 5vw, 32px);
   max-width: 1400px;
   margin: 0 auto;
+
+  @media (max-width: 480px) {
+    padding: 20px 15px;
+  }
 `;
 
 const Header = styled.div`
-  margin-bottom: 48px;
+  margin-bottom: clamp(30px, 8vw, 48px);
+
+  @media (max-width: 480px) {
+    margin-bottom: 30px;
+  }
 `;
 
 const WelcomeCard = styled.div`
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 24px;
-  padding: 40px;
+  border-radius: clamp(16px, 4vw, 24px);
+  padding: clamp(25px, 6vw, 40px);
   color: white;
   position: relative;
   overflow: hidden;
-  margin-bottom: 32px;
+  margin-bottom: clamp(25px, 6vw, 32px);
+
+  @media (max-width: 480px) {
+    padding: 25px 20px;
+    border-radius: 16px;
+    margin-bottom: 25px;
+  }
 
   &::before {
     content: '';
@@ -57,35 +64,53 @@ const WelcomeCard = styled.div`
 `;
 
 const WelcomeTitle = styled.h1`
-  font-size: 2.5rem;
+  font-size: clamp(24px, 6vw, 2.5rem);
   font-weight: 700;
-  margin: 0 0 8px 0;
+  margin: 0 0 clamp(6px, 2vw, 8px) 0;
   line-height: 1.2;
+
+  @media (max-width: 480px) {
+    font-size: 28px;
+  }
 `;
 
 const WelcomeSubtitle = styled.p`
-  font-size: 1.1rem;
+  font-size: clamp(14px, 3.5vw, 1.1rem);
   opacity: 0.9;
   margin: 0;
   font-weight: 400;
+
+  @media (max-width: 480px) {
+    font-size: 15px;
+  }
 `;
 
 const StatsSection = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  margin-bottom: 48px;
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: clamp(20px, 5vw, 24px);
+  margin-bottom: clamp(35px, 8vw, 48px);
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-bottom: 35px;
+  }
 `;
 
 const StatCard = styled.div`
   background: white;
-  border-radius: 16px;
-  padding: 32px;
+  border-radius: clamp(12px, 3vw, 16px);
+  padding: clamp(24px, 6vw, 32px);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
   transition: all 0.2s ease;
   position: relative;
-  overflow: hidden;
+
+  @media (max-width: 480px) {
+    padding: 24px 20px;
+    border-radius: 12px;
+  }
 
   &:hover {
     transform: translateY(-2px);
@@ -314,6 +339,34 @@ const ProgressBar = styled.div`
 const ProgressFill = styled.div`
   height: 100%;
   background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+`;
+
+const Dashboard = () => {
+  const [user, setUser] = useState(null);
+  const [stats] = useState({
+    coursesCompleted: 12,
+    hoursLearned: 48,
+    certificates: 3,
+    streak: 7
+  });
+  const [notifications] = useState([
+    { id: 1, title: 'Mathématiques - Chapitre 3', time: 'Il y a 2 heures', icon: FiBookOpen },
+    { id: 2, title: 'Exercice de Physique', time: 'Il y a 5 heures', icon: FiZap },
+    { id: 3, title: 'Quiz d\'Histoire', time: 'Hier', icon: FiAward }
+  ]);
+  const [progressData] = useState([
+    { label: 'Mathématiques', percent: 75 },
+    { label: 'Physique', percent: 60 },
+    { label: 'Histoire', percent: 90 }
+  ]);
+
+  useEffect(() => {
+    // Simuler le chargement des données utilisateur
+    const userData = {
+      firstName: 'Jean'
+    };
+    setUser(userData);
+  }, []);
 
   return (
     <ResponsiveNavigation>
@@ -373,6 +426,8 @@ const ProgressFill = styled.div`
           </Header>
 
           <ContentGrid>
+            <RecentActivity>
+              <SectionTitle>
                 <FiBell />
                 Activité récente
               </SectionTitle>
@@ -404,7 +459,7 @@ const ProgressFill = styled.div`
                   <ProgressPercent>{item.percent}%</ProgressPercent>
                 </ProgressHeader>
                 <ProgressBar>
-                  <ProgressFill width={`${ item.percent }% `} />
+                  <ProgressFill style={{width: `${item.percent}%`}} />
                 </ProgressBar>
               </ProgressItem>
             ))}

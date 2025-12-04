@@ -20,18 +20,28 @@ const MainContent = styled.main`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: clamp(20px, 5vw, 40px) clamp(15px, 4vw, 20px);
+
+  @media (max-width: 480px) {
+    padding: 20px 15px;
+  }
 `;
 
 const LoginCard = styled(motion.div)`
   background: white;
-  border-radius: 24px;
-  padding: 50px;
+  border-radius: clamp(16px, 4vw, 24px);
+  padding: clamp(30px, 6vw, 50px);
   width: 100%;
   max-width: 450px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    max-width: 100%;
+    padding: 30px 20px;
+    border-radius: 16px;
+  }
 
   &::before {
     content: '';
@@ -61,24 +71,36 @@ const BackButton = styled(Link)`
 `;
 
 const Title = styled.h1`
-  font-size: 32px;
+  font-size: clamp(24px, 6vw, 32px);
   font-weight: 800;
   color: #1f2937;
-  margin-bottom: 8px;
+  margin-bottom: clamp(6px, 2vw, 8px);
   text-align: center;
+
+  @media (max-width: 480px) {
+    font-size: 28px;
+  }
 `;
 
 const Subtitle = styled.p`
-  font-size: 16px;
+  font-size: clamp(14px, 3.5vw, 16px);
   color: #6b7280;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: clamp(30px, 6vw, 40px);
+
+  @media (max-width: 480px) {
+    margin-bottom: 30px;
+  }
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: clamp(20px, 5vw, 24px);
+
+  @media (max-width: 480px) {
+    gap: 20px;
+  }
 `;
 
 const InputGroup = styled.div`
@@ -87,10 +109,14 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   display: block;
-  font-size: 14px;
+  font-size: clamp(13px, 3.5vw, 14px);
   font-weight: 600;
   color: #374151;
-  margin-bottom: 8px;
+  margin-bottom: clamp(6px, 2vw, 8px);
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `;
 
 const InputContainer = styled.div`
@@ -109,13 +135,19 @@ const InputIcon = styled.div`
 
 const Input = styled.input`
   width: 100%;
-  padding: 16px 16px 16px 50px;
+  padding: clamp(14px, 4vw, 16px) clamp(14px, 4vw, 16px) clamp(14px, 4vw, 16px) clamp(45px, 10vw, 50px);
   border: 2px solid ${props => props.error ? '#ef4444' : '#e5e7eb'};
-  border-radius: 12px;
-  font-size: 16px;
+  border-radius: clamp(10px, 3vw, 12px);
+  font-size: clamp(15px, 4vw, 16px);
   font-family: inherit;
   background: #f9fafb;
   transition: all 0.3s ease;
+
+  @media (max-width: 480px) {
+    padding: 14px 14px 14px 45px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
 
   &:focus {
     outline: none;
@@ -201,20 +233,27 @@ const ForgotPassword = styled(Link)`
 const SubmitButton = styled(motion.button)`
   background: linear-gradient(135deg, #1e40af, #3b82f6);
   color: white;
-  padding: 16px 32px;
+  padding: clamp(14px, 4vw, 16px) clamp(24px, 6vw, 32px);
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
+  border-radius: clamp(10px, 3vw, 12px);
+  font-size: clamp(15px, 4vw, 16px);
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: clamp(8px, 2vw, 10px);
+  margin-top: clamp(16px, 4vw, 20px);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    padding: 14px 24px;
+    font-size: 15px;
+    border-radius: 10px;
+    margin-top: 16px;
+  }
 
   &:disabled {
     opacity: 0.6;

@@ -7,53 +7,53 @@ import ResponsiveNavigation from '../components/ResponsiveNavigation';
 const CoursesContainer = styled.div`
   min-height: 100vh;
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  padding: 20px;
-  padding-bottom: 100px;
+  padding: clamp(15px, 4vw, 20px);
+  padding-bottom: clamp(80px, 15vw, 100px);
 
   @media (min-width: 769px) {
-    padding: 40px;
+    padding: clamp(30px, 6vw, 40px);
     padding-bottom: 0;
   }
 `;
 
 const Header = styled.div`
   background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-  margin: -20px -20px 30px;
-  padding: 40px 20px;
+  margin: calc(-1 * clamp(15px, 4vw, 20px)) calc(-1 * clamp(15px, 4vw, 20px)) clamp(25px, 6vw, 30px);
+  padding: clamp(30px, 8vw, 40px) clamp(15px, 4vw, 20px);
   color: white;
-  border-radius: 0 0 24px 24px;
+  border-radius: 0 0 clamp(20px, 5vw, 24px) clamp(20px, 5vw, 24px);
 
   @media (min-width: 769px) {
-    margin: -40px -40px 40px;
-    padding: 60px 40px;
-    border-radius: 0 0 32px 32px;
+    margin: calc(-1 * clamp(30px, 6vw, 40px)) calc(-1 * clamp(30px, 6vw, 40px)) clamp(35px, 8vw, 40px);
+    padding: clamp(50px, 10vw, 60px) clamp(30px, 6vw, 40px);
+    border-radius: 0 0 clamp(24px, 6vw, 32px) clamp(24px, 6vw, 32px);
   }
 `;
 
 const HeaderTitle = styled.h1`
-  font-size: 28px;
+  font-size: clamp(24px, 6vw, 28px);
   font-weight: 800;
-  margin-bottom: 8px;
+  margin-bottom: clamp(6px, 2vw, 8px);
 
   @media (min-width: 768px) {
-    font-size: 36px;
+    font-size: clamp(30px, 8vw, 36px);
   }
 `;
 
 const HeaderSubtitle = styled.p`
-  font-size: 16px;
+  font-size: clamp(14px, 3.5vw, 16px);
   opacity: 0.9;
 `;
 
 const CoursesGrid = styled.div`
   display: grid;
-  gap: 20px;
+  gap: clamp(16px, 4vw, 20px);
   max-width: 1200px;
   margin: 0 auto;
 
   @media (min-width: 768px) {
     grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
+    gap: clamp(20px, 5vw, 24px);
   }
 
   @media (min-width: 1024px) {
@@ -63,12 +63,17 @@ const CoursesGrid = styled.div`
 
 const CourseCard = styled(motion.div)`
   background: white;
-  border-radius: 20px;
-  padding: 24px;
+  border-radius: clamp(16px, 4vw, 20px);
+  padding: clamp(20px, 5vw, 24px);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(0, 0, 0, 0.05);
   cursor: pointer;
   transition: all 0.3s ease;
+
+  @media (max-width: 480px) {
+    padding: 20px;
+    border-radius: 16px;
+  }
 
   &:hover {
     transform: translateY(-4px);

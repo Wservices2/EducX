@@ -1,0 +1,19 @@
+// Patch pour Dashboard.js
+// Ajoutez ces modifications manuellement :
+
+// 1. Ligne 4 - Ajouter après "import { useAuth } from '../context/AuthContext';"
+import { useNavigate } from 'react-router-dom';
+
+// 2. Dans la fonction Dashboard, après "const { user } = useAuth();" ajouter :
+const navigate = useNavigate();
+
+// 3. Modifier le tableau quickActions pour ajouter les routes :
+const quickActions = [
+  { title: 'Continuer', subtitle: 'Mes cours', icon: FiPlay, color: '#10b981', bgColor: '#10b981', route: '/courses' },
+  { title: 'Explorer', subtitle: 'Nouveaux cours', icon: FiBookOpen, color: '#3b82f6', bgColor: '#3b82f6', route: '/courses' },
+  { title: 'Profil', subtitle: 'Mon compte', icon: FiUser, color: '#8b5cf6', bgColor: '#8b5cf6', route: '/profile' },
+  { title: 'Paramètres', subtitle: 'Configuration', icon: FiSettings, color: '#f59e0b', bgColor: '#f59e0b', route: '/settings' }
+];
+
+// 4. Dans le map des quickActions, modifier <ActionItem> pour ajouter onClick :
+<ActionItem key={index} onClick={() => navigate(action.route)}>

@@ -19,18 +19,28 @@ const MainContent = styled.main`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: clamp(20px, 5vw, 40px) clamp(15px, 4vw, 20px);
+
+  @media (max-width: 480px) {
+    padding: 20px 15px;
+  }
 `;
 
 const RegisterCard = styled(motion.div)`
   background: white;
-  border-radius: 24px;
-  padding: 50px;
+  border-radius: clamp(16px, 4vw, 24px);
+  padding: clamp(30px, 6vw, 50px);
   width: 100%;
   max-width: 500px;
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
   position: relative;
   overflow: hidden;
+
+  @media (max-width: 480px) {
+    max-width: 100%;
+    padding: 30px 20px;
+    border-radius: 16px;
+  }
 
   &::before {
     content: '';
@@ -60,24 +70,36 @@ const BackButton = styled(Link)`
 `;
 
 const Title = styled.h1`
-  font-size: 32px;
+  font-size: clamp(24px, 6vw, 32px);
   font-weight: 800;
   color: #1f2937;
-  margin-bottom: 8px;
+  margin-bottom: clamp(6px, 2vw, 8px);
   text-align: center;
+
+  @media (max-width: 480px) {
+    font-size: 28px;
+  }
 `;
 
 const Subtitle = styled.p`
-  font-size: 16px;
+  font-size: clamp(14px, 3.5vw, 16px);
   color: #6b7280;
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: clamp(30px, 6vw, 40px);
+
+  @media (max-width: 480px) {
+    margin-bottom: 30px;
+  }
 `;
 
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: clamp(20px, 5vw, 24px);
+
+  @media (max-width: 480px) {
+    gap: 20px;
+  }
 `;
 
 const InputGroup = styled.div`
@@ -86,10 +108,14 @@ const InputGroup = styled.div`
 
 const Label = styled.label`
   display: block;
-  font-size: 14px;
+  font-size: clamp(13px, 3.5vw, 14px);
   font-weight: 600;
   color: #374151;
-  margin-bottom: 8px;
+  margin-bottom: clamp(6px, 2vw, 8px);
+
+  @media (max-width: 480px) {
+    font-size: 13px;
+  }
 `;
 
 const InputContainer = styled.div`
