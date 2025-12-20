@@ -1109,8 +1109,8 @@ const HomePage = () => {
 };
 
 
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+
+export default HomePage;
 import { motion } from 'framer-motion';
 import { FiPlay, FiArrowRight, FiBookOpen, FiAward, FiUsers, FiTarget, FiStar, FiZap, FiShield, FiTrendingUp, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
