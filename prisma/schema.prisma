@@ -110,4 +110,4 @@ model Certificate {
   @@map("certificates")
 }
 
-// Enums removed - using String type for Neon compatibility
+// Enums removed - using String type for MongoDB compatibility
