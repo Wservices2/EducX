@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
@@ -713,7 +712,7 @@ const CTAButton = styled(motion.button)`
 const HomePage = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+
   const slideshowImages = [
     'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
     'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
@@ -721,27 +720,27 @@ const HomePage = () => {
     'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
     'https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2'
   ];
-  
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slideshowImages.length);
     }, 4000);
-    
+
     return () => clearInterval(timer);
   }, [slideshowImages.length]);
-  
+
   const goToSlide = (index) => {
     setCurrentSlide(index);
   };
-  
+
   const goToPrevious = () => {
     setCurrentSlide((prev) => (prev - 1 + slideshowImages.length) % slideshowImages.length);
   };
-  
+
   const goToNext = () => {
     setCurrentSlide((prev) => (prev + 1) % slideshowImages.length);
   };
-  
+
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0 }
@@ -775,21 +774,21 @@ const HomePage = () => {
               transition={{ duration: 0.8 }}
             >
               L'excellence éducative<br />
-              <div className="flag-text" style={{ 
-                display: 'inline-flex', 
-                alignItems: 'flex-end', 
-                gap: '16px', 
+              <div className="flag-text" style={{
+                display: 'inline-flex',
+                alignItems: 'flex-end',
+                gap: '16px',
                 marginTop: '10px',
                 background: 'none',
                 WebkitBackgroundClip: 'initial',
                 WebkitTextFillColor: 'initial',
                 color: '#1e40af'
               }}>
-                <span className="flag-word" style={{ 
-                  position: 'relative', 
-                  display: 'inline-block', 
-                  color: '#1e40af', 
-                  fontWeight: '900', 
+                <span className="flag-word" style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  color: '#1e40af',
+                  fontWeight: '900',
                   fontSize: 'inherit',
                   background: 'none',
                   WebkitBackgroundClip: 'initial',
@@ -808,11 +807,11 @@ const HomePage = () => {
                     boxShadow: '0 5px 20px rgba(0, 0, 0, 0.25)'
                   }}></div>
                 </span>
-                <span className="flag-word" style={{ 
-                  position: 'relative', 
-                  display: 'inline-block', 
-                  color: '#1e40af', 
-                  fontWeight: '900', 
+                <span className="flag-word" style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  color: '#1e40af',
+                  fontWeight: '900',
                   fontSize: 'inherit',
                   background: 'none',
                   WebkitBackgroundClip: 'initial',
@@ -831,11 +830,11 @@ const HomePage = () => {
                     boxShadow: '0 5px 20px rgba(0, 0, 0, 0.25)'
                   }}></div>
                 </span>
-                <span className="flag-word" style={{ 
-                  position: 'relative', 
-                  display: 'inline-block', 
-                  color: '#1e40af', 
-                  fontWeight: '900', 
+                <span className="flag-word" style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  color: '#1e40af',
+                  fontWeight: '900',
                   fontSize: 'inherit',
                   background: 'none',
                   WebkitBackgroundClip: 'initial',
@@ -856,7 +855,7 @@ const HomePage = () => {
                 </span>
               </div>
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="subtitle"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -864,7 +863,7 @@ const HomePage = () => {
             >
               Transformez votre apprentissage avec des cours interactifs, un suivi personnalisé et une communauté active
             </motion.p>
-            <motion.p 
+            <motion.p
               className="description"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -924,21 +923,21 @@ const HomePage = () => {
                   />
                 ))}
               </SlideIndicators>
-              <FloatingIcon 
+              <FloatingIcon
                 className="book"
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
                 <FiBookOpen />
               </FloatingIcon>
-              <FloatingIcon 
+              <FloatingIcon
                 className="graduation"
                 animate={{ y: [0, -15, 0] }}
                 transition={{ duration: 4, repeat: Infinity }}
               >
                 <FiAward />
               </FloatingIcon>
-              <FloatingIcon 
+              <FloatingIcon
                 className="star"
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 8, repeat: Infinity }}
@@ -1137,7 +1136,7 @@ const HeroSection = styled.section`
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
+    background:
       radial-gradient(circle at 20% 20%, rgba(7, 47, 166, 0.1) 0%, transparent 50%),
       radial-gradient(circle at 80% 80%, rgba(158, 7, 166, 0.1) 0%, transparent 50%),
       radial-gradient(circle at 40% 60%, rgba(6, 183, 80, 0.1) 0%, transparent 50%);
@@ -1196,7 +1195,7 @@ const HeroText = styled.div`
       gap: clamp(8px, 2vw, 16px);
       flex-wrap: wrap;
       justify-content: center;
-      
+
       .flag-word {
         color: #1e40af;
         position: relative;
@@ -1205,7 +1204,7 @@ const HeroText = styled.div`
         display: inline-block;
         text-align: center;
         font-size: clamp(28px, 6vw, 48px);
-        
+
         &::after {
           content: '';
           position: absolute;
@@ -1218,15 +1217,15 @@ const HeroText = styled.div`
           box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
           transition: all 0.3s ease;
         }
-        
+
         &:nth-child(1)::after {
           background: linear-gradient(90deg, #06B750, #059669);
         }
-        
+
         &:nth-child(2)::after {
           background: linear-gradient(90deg, #F59E0B, #D97706);
         }
-        
+
         &:nth-child(3)::after {
           background: linear-gradient(90deg, #EF4444, #DC2626);
         }
@@ -1824,7 +1823,7 @@ const CTAButton = styled(motion.button)`
 const HomePage = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+
   const slideshowImages = [
     'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
     'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
@@ -1832,27 +1831,27 @@ const HomePage = () => {
     'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
     'https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2'
   ];
-  
+
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slideshowImages.length);
     }, 4000);
-    
+
     return () => clearInterval(timer);
   }, [slideshowImages.length]);
-  
+
   const goToSlide = (index) => {
     setCurrentSlide(index);
   };
-  
+
   const goToPrevious = () => {
     setCurrentSlide((prev) => (prev - 1 + slideshowImages.length) % slideshowImages.length);
   };
-  
+
   const goToNext = () => {
     setCurrentSlide((prev) => (prev + 1) % slideshowImages.length);
   };
-  
+
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0 }
@@ -1886,21 +1885,21 @@ const HomePage = () => {
               transition={{ duration: 0.8 }}
             >
               L'excellence éducative<br />
-              <div className="flag-text" style={{ 
-                display: 'inline-flex', 
-                alignItems: 'flex-end', 
-                gap: '16px', 
+              <div className="flag-text" style={{
+                display: 'inline-flex',
+                alignItems: 'flex-end',
+                gap: '16px',
                 marginTop: '10px',
                 background: 'none',
                 WebkitBackgroundClip: 'initial',
                 WebkitTextFillColor: 'initial',
                 color: '#1e40af'
               }}>
-                <span className="flag-word" style={{ 
-                  position: 'relative', 
-                  display: 'inline-block', 
-                  color: '#1e40af', 
-                  fontWeight: '900', 
+                <span className="flag-word" style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  color: '#1e40af',
+                  fontWeight: '900',
                   fontSize: 'inherit',
                   background: 'none',
                   WebkitBackgroundClip: 'initial',
@@ -1919,11 +1918,11 @@ const HomePage = () => {
                     boxShadow: '0 5px 20px rgba(0, 0, 0, 0.25)'
                   }}></div>
                 </span>
-                <span className="flag-word" style={{ 
-                  position: 'relative', 
-                  display: 'inline-block', 
-                  color: '#1e40af', 
-                  fontWeight: '900', 
+                <span className="flag-word" style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  color: '#1e40af',
+                  fontWeight: '900',
                   fontSize: 'inherit',
                   background: 'none',
                   WebkitBackgroundClip: 'initial',
@@ -1942,11 +1941,11 @@ const HomePage = () => {
                     boxShadow: '0 5px 20px rgba(0, 0, 0, 0.25)'
                   }}></div>
                 </span>
-                <span className="flag-word" style={{ 
-                  position: 'relative', 
-                  display: 'inline-block', 
-                  color: '#1e40af', 
-                  fontWeight: '900', 
+                <span className="flag-word" style={{
+                  position: 'relative',
+                  display: 'inline-block',
+                  color: '#1e40af',
+                  fontWeight: '900',
                   fontSize: 'inherit',
                   background: 'none',
                   WebkitBackgroundClip: 'initial',
@@ -1967,7 +1966,7 @@ const HomePage = () => {
                 </span>
               </div>
             </motion.h1>
-            <motion.p 
+            <motion.p
               className="subtitle"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1975,7 +1974,7 @@ const HomePage = () => {
             >
               Transformez votre apprentissage avec des cours interactifs, un suivi personnalisé et une communauté active
             </motion.p>
-            <motion.p 
+            <motion.p
               className="description"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -2035,21 +2034,21 @@ const HomePage = () => {
                   />
                 ))}
               </SlideIndicators>
-              <FloatingIcon 
+              <FloatingIcon
                 className="book"
                 animate={{ y: [0, -10, 0] }}
                 transition={{ duration: 3, repeat: Infinity }}
               >
                 <FiBookOpen />
               </FloatingIcon>
-              <FloatingIcon 
+              <FloatingIcon
                 className="graduation"
                 animate={{ y: [0, -15, 0] }}
                 transition={{ duration: 4, repeat: Infinity }}
               >
                 <FiAward />
               </FloatingIcon>
-              <FloatingIcon 
+              <FloatingIcon
                 className="star"
                 animate={{ rotate: [0, 360] }}
                 transition={{ duration: 8, repeat: Infinity }}

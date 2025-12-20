@@ -351,7 +351,7 @@ const RegisterPage = () => {
     password: '',
     confirmPassword: ''
   });
-  
+
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -426,17 +426,13 @@ const RegisterPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
+
     try {
-<<<<<<< HEAD
       const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.AUTH.REGISTER}`, {
-=======
-      const response = await fetch('http://localhost:5000/api/auth/register', {
->>>>>>> 37b56642f1115aa25f6067ac55742b8556b69362
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

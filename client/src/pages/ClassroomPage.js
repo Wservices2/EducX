@@ -1,8 +1,7 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   FiBookOpen, FiPlay, FiTarget, FiChevronRight, FiChevronLeft,
   FiZap, FiShield, FiPlus, FiMap, FiMessageCircle
 } from 'react-icons/fi';
@@ -812,11 +811,9 @@ const ClassroomPage = () => {
   );
 };
 
-=======
-import React, { useState } from 'react';
-import styled from 'styled-components';
+export default ClassroomPage;
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
+import {
   FiBookOpen, FiPlay, FiTarget, FiChevronRight, FiChevronLeft,
   FiZap, FiShield, FiPlus, FiMap, FiMessageCircle
 } from 'react-icons/fi';
@@ -836,7 +833,7 @@ const ClassroomContainer = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
+    background:
       radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
       radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%);
     pointer-events: none;
