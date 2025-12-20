@@ -22,6 +22,12 @@ const MainContent = styled.div`
   padding: 32px;
   max-width: 1400px;
   margin: 0 auto;
+  padding-bottom: 100px; // Space for bottom nav on mobile
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    padding-bottom: 90px;
+  }
 `;
 
 const Header = styled.div`
@@ -49,6 +55,11 @@ const WelcomeCard = styled.div`
     animation: float 6s ease-in-out infinite;
   }
 
+  @media (max-width: 768px) {
+    padding: 24px;
+    border-radius: 20px;
+  }
+
   @keyframes float {
     0%, 100% { transform: translateY(0px) rotate(0deg); }
     50% { transform: translateY(-20px) rotate(180deg); }
@@ -60,6 +71,10 @@ const WelcomeTitle = styled.h1`
   font-weight: 700;
   margin: 0 0 8px 0;
   line-height: 1.2;
+
+  @media (max-width: 768px) {
+    font-size: 1.75rem;
+  }
 `;
 
 const WelcomeSubtitle = styled.p`
@@ -74,6 +89,12 @@ const StatsSection = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
   margin-bottom: 48px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+  }
 `;
 
 const StatCard = styled.div`
@@ -81,6 +102,10 @@ const StatCard = styled.div`
   border-radius: 16px;
   padding: 32px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
   border: 1px solid #e5e7eb;
   transition: all 0.2s ease;
   position: relative;
@@ -143,6 +168,7 @@ const ContentGrid = styled.div`
 
   @media (max-width: 1024px) {
     grid-template-columns: 1fr;
+    gap: 24px;
   }
 `;
 
@@ -172,6 +198,10 @@ const ActionsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const ActionItem = styled.div`

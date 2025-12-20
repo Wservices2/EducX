@@ -1,21 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
-import { NavLink } from 'react-router-dom';
-import { FiHome, FiBookOpen, FiMail, FiUser } from 'react-icons/fi';
+import { NavLink, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FiHome, FiBookOpen, FiMail, FiUser, FiAward } from 'react-icons/fi';
 
 const BottomNavContainer = styled.div`
   position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 64px;
-  background: white;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  padding: 0 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  border-top: 1px solid #f3f4f6;
+  border: 1px solid rgba(255, 255, 255, 0.5);
 
   @media (min-width: 769px) {
     display: none;
@@ -29,55 +33,123 @@ const NavItem = styled(NavLink)`
   justify-content: center;
   text-decoration: none;
   color: #9ca3af;
-  font-size: 0.75rem;
-  font-weight: 500;
-  width: 100%;
-  height: 100%;
-  transition: all 0.2s ease;
+  position: relative;
+  width: 50px;
+  height: 50px;
+  transition: all 0.3s ease;
 
   &.active {
     color: #667eea;
     
-    svg {
+    .icon-container {
       transform: translateY(-2px);
     }
   }
+`;
+
+const FloatingHomeWrapper = styled.div`
+  position: relative;
+  top: -25px;
+  width: 60px;
+  height: 60px;
+`;
+
+const FloatingHomeButton = styled(NavLink)`
+  width: 60px;
+  height: 60px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  border: 4px solid white;
+
+  &.active {
+    transform: scale(1.1);
+    box-shadow: 0 12px 25px rgba(102, 126, 234, 0.5);
+  }
 
   &:hover {
-    color: #667eea;
+    transform: translateY(-5px);
   }
 `;
 
-const IconWrapper = styled.div`
-  font-size: 1.5rem;
-  margin-bottom: 4px;
-  transition: transform 0.2s ease;
+const IconWrapper = styled(motion.div)`
+  font-size: 1.4rem;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Label = styled(motion.span)`
+  font-size: 0.65rem;
+  font-weight: 600;
+  margin-top: 2px;
+  position: absolute;
+  bottom: -15px;
+  width: 100%;
+  text-align: center;
+  white-space: nowrap;
 `;
 
 const BottomNavigation = () => {
-    const navItems = [
-        { path: '/dashboard', icon: FiHome, label: 'Accueil' },
-        { path: '/classroom', icon: FiBookOpen, label: 'Classe' },
-        { path: '/inbox', icon: FiMail, label: 'Messages' },
-        { path: '/profile', icon: FiUser, label: 'Profil' }
-    ];
+  const location = useLocation();
 
-    return (
-        <BottomNavContainer>
-            {navItems.map((item) => (
-                <NavItem
-                    key={item.path}
-                    to={item.path}
-                    className={({ isActive }) => isActive ? 'active' : ''}
-                >
-                    <IconWrapper>
-                        <item.icon />
-                    </IconWrapper>
-                    <span>{item.label}</span>
-                </NavItem>
-            ))}
-        </BottomNavContainer>
-    );
+  const navItems = [
+    { path: '/classroom', icon: FiBookOpen, label: 'Classe' },
+    { path: '/inbox', icon: FiMail, label: 'Messages' },
+    // Home is handled separately
+    { path: '/subscription', icon: FiAward, label: 'Abonnement' },
+    { path: '/profile', icon: FiUser, label: 'Profil' }
+  ];
+
+  return (
+    <BottomNavContainer>
+      {/* Classe */}
+      <NavItem to="/classroom" className={({ isActive }) => isActive ? 'active' : ''}>
+        <IconWrapper className="icon-container">
+          <FiBookOpen />
+        </IconWrapper>
+        {location.pathname === '/classroom' && <Label initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Classe</Label>}
+      </NavItem>
+
+      {/* Messages */}
+      <NavItem to="/inbox" className={({ isActive }) => isActive ? 'active' : ''}>
+        <IconWrapper className="icon-container">
+          <FiMail />
+        </IconWrapper>
+        {location.pathname === '/inbox' && <Label initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Messages</Label>}
+      </NavItem>
+
+      {/* CENTER FLOATING HOME BUTTON */}
+      <FloatingHomeWrapper>
+        <FloatingHomeButton to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
+          <FiHome />
+        </FloatingHomeButton>
+      </FloatingHomeWrapper>
+
+      {/* Abonnement */}
+      <NavItem to="/subscription" className={({ isActive }) => isActive ? 'active' : ''}>
+        <IconWrapper className="icon-container">
+          <FiAward />
+        </IconWrapper>
+        {location.pathname === '/subscription' && <Label initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Abonné</Label>}
+      </NavItem>
+
+      {/* Profil */}
+      <NavItem to="/profile" className={({ isActive }) => isActive ? 'active' : ''}>
+        <IconWrapper className="icon-container">
+          <FiUser />
+        </IconWrapper>
+        {location.pathname === '/profile' && <Label initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Profil</Label>}
+      </NavItem>
+    </BottomNavContainer>
+  );
 };
 
 export default BottomNavigation;
