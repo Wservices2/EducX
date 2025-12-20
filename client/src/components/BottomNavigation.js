@@ -12,7 +12,7 @@ const BottomNavContainer = styled(motion.div)`
   background: linear-gradient(135deg, #FFFFFF 0%, #EDF6F6 100%);
   backdrop-filter: blur(30px);
   border-top: 2px solid #072FA6;
-  padding: clamp(12px, 3vw, 16px) clamp(15px, 4vw, 20px) clamp(18px, 4vw, 24px);
+  padding: clamp(8px, 2vw, 12px) clamp(12px, 3vw, 16px) clamp(12px, 3vw, 16px);
   z-index: 1000;
   display: none;
   box-shadow: 0 -10px 40px rgba(7, 47, 166, 0.15);
@@ -22,7 +22,7 @@ const BottomNavContainer = styled(motion.div)`
   }
 
   @media (max-width: 480px) {
-    padding: 12px 15px 18px;
+    padding: 8px 12px 12px;
   }
 `;
 

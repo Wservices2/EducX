@@ -741,16 +741,6 @@ const HomePage = () => {
     setCurrentSlide((prev) => (prev + 1) % slideshowImages.length);
   };
   
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
   const itemVariants = {
     hidden: { opacity: 0, y: 30 },
     visible: { opacity: 1, y: 0 }
@@ -761,7 +751,7 @@ const HomePage = () => {
   };
 
   const handleVoirCours = () => {
-    navigate('/courses');
+    navigate('/login');
   };
 
   const handleCommencerGratuitement = () => {

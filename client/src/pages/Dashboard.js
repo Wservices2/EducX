@@ -1,7 +1,13 @@
 ﻿import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 import {
-  FiBookOpen, FiAward, FiClock, FiTrendingUp, FiBell, FiZap, FiBarChart
+  FiBookOpen, FiAward, FiClock, FiTrendingUp, FiPlay, FiStar,
+  FiUsers, FiCalendar, FiTarget, FiCheckCircle, FiMail, FiHome,
+  FiCreditCard, FiUser, FiBell, FiSettings, FiLogOut, FiHeart,
+  FiZap, FiShield, FiGift, FiSun, FiArrowRight, FiBarChart,
+  FiChevronRight, FiPlus, FiMoreHorizontal
 } from 'react-icons/fi';
 import ResponsiveNavigation from '../components/ResponsiveNavigation';
 
@@ -13,37 +19,23 @@ const DashboardContainer = styled.div`
 `;
 
 const MainContent = styled.div`
-  padding: clamp(24px, 6vw, 40px);
+  padding: 32px;
   max-width: 1400px;
   margin: 0 auto;
-
-  @media (max-width: 480px) {
-    padding: 24px 20px;
-  }
 `;
 
 const Header = styled.div`
-  margin-bottom: clamp(30px, 8vw, 48px);
-
-  @media (max-width: 480px) {
-    margin-bottom: 30px;
-  }
+  margin-bottom: 48px;
 `;
 
 const WelcomeCard = styled.div`
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: clamp(16px, 4vw, 24px);
-  padding: clamp(28px, 7vw, 48px);
+  border-radius: 24px;
+  padding: 40px;
   color: white;
   position: relative;
   overflow: hidden;
-  margin-bottom: clamp(28px, 7vw, 40px);
-
-  @media (max-width: 480px) {
-    padding: 28px 24px;
-    border-radius: 16px;
-    margin-bottom: 28px;
-  }
+  margin-bottom: 32px;
 
   &::before {
     content: '';
@@ -64,53 +56,35 @@ const WelcomeCard = styled.div`
 `;
 
 const WelcomeTitle = styled.h1`
-  font-size: clamp(24px, 6vw, 2.5rem);
+  font-size: 2.5rem;
   font-weight: 700;
-  margin: 0 0 clamp(6px, 2vw, 8px) 0;
+  margin: 0 0 8px 0;
   line-height: 1.2;
-
-  @media (max-width: 480px) {
-    font-size: 28px;
-  }
 `;
 
 const WelcomeSubtitle = styled.p`
-  font-size: clamp(14px, 3.5vw, 1.1rem);
+  font-size: 1.1rem;
   opacity: 0.9;
   margin: 0;
   font-weight: 400;
-
-  @media (max-width: 480px) {
-    font-size: 15px;
-  }
 `;
 
 const StatsSection = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
-  gap: clamp(20px, 5vw, 24px);
-  margin-bottom: clamp(35px, 8vw, 48px);
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    margin-bottom: 35px;
-  }
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 48px;
 `;
 
 const StatCard = styled.div`
   background: white;
-  border-radius: clamp(12px, 3vw, 16px);
-  padding: clamp(24px, 6vw, 32px);
+  border-radius: 16px;
+  padding: 32px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border: 1px solid #e5e7eb;
   transition: all 0.2s ease;
   position: relative;
-
-  @media (max-width: 480px) {
-    padding: 24px 20px;
-    border-radius: 12px;
-  }
+  overflow: hidden;
 
   &:hover {
     transform: translateY(-2px);
@@ -194,55 +168,55 @@ const SectionTitle = styled.h2`
   }
 `;
 
-// const ActionsGrid = styled.div`
-//   display: grid;
-//   grid-template-columns: repeat(2, 1fr);
-//   gap: 16px;
-// `;
+const ActionsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+`;
 
-// const ActionItem = styled.div`
-//   display: flex;
-//   align-items: center;
-//   gap: 16px;
-//   padding: 20px;
-//   border-radius: 12px;
-//   background: #f9fafb;
-//   border: 1px solid #e5e7eb;
-//   cursor: pointer;
-//   transition: all 0.2s ease;
+const ActionItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s ease;
 
-//   &:hover {
-//     background: #f3f4f6;
-//     transform: translateY(-1px);
-//   }
-// `;
+  &:hover {
+    background: #f3f4f6;
+    transform: translateY(-1px);
+  }
+`;
 
-// const ActionIcon = styled.div`
-//   width: 40px;
-//   height: 40px;
-//   border-radius: 10px;
-//   background: ${props => props.bgColor || '#667eea'};
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   color: white;
-//   font-size: 20px;
-// `;
+const ActionIcon = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: ${props => props.bgColor || '#667eea'};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 20px;
+`;
 
-// const ActionText = styled.div`
-//   flex: 1;
-// `;
+const ActionText = styled.div`
+  flex: 1;
+`;
 
-// const ActionTitle = styled.div`
-//   font-weight: 600;
-//   color: #1f2937;
-//   margin-bottom: 4px;
-// `;
+const ActionTitle = styled.div`
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+`;
 
-// const ActionSubtitle = styled.div`
-//   font-size: 0.875rem;
-//   color: #6b7280;
-// `;
+const ActionSubtitle = styled.div`
+  font-size: 0.875rem;
+  color: #6b7280;
+`;
 
 const RecentActivity = styled.div`
   background: white;
@@ -339,34 +313,38 @@ const ProgressBar = styled.div`
 const ProgressFill = styled.div`
   height: 100%;
   background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  border-radius: 4px;
+  transition: width 0.8s ease;
+  width: ${props => props.width || '0%'};
 `;
 
 const Dashboard = () => {
-  const [user, setUser] = useState(null);
-  const [stats] = useState({
+  const { user } = useAuth();
+  const [stats, setStats] = useState({
     coursesCompleted: 12,
-    hoursLearned: 48,
+    hoursLearned: 45,
     certificates: 3,
     streak: 7
   });
-  const [notifications] = useState([
-    { id: 1, title: 'Mathématiques - Chapitre 3', time: 'Il y a 2 heures', icon: FiBookOpen },
-    { id: 2, title: 'Exercice de Physique', time: 'Il y a 5 heures', icon: FiZap },
-    { id: 3, title: 'Quiz d\'Histoire', time: 'Hier', icon: FiAward }
-  ]);
-  const [progressData] = useState([
-    { label: 'Mathématiques', percent: 75 },
-    { label: 'Physique', percent: 60 },
-    { label: 'Histoire', percent: 90 }
+
+  const [notifications, setNotifications] = useState([
+    { id: 1, title: 'Nouveau cours disponible', time: 'Il y a 2h', icon: FiBookOpen },
+    { id: 2, title: 'Certificat obtenu', time: 'Il y a 1 jour', icon: FiAward },
+    { id: 3, title: 'Rappel de cours', time: 'Il y a 2 jours', icon: FiClock }
   ]);
 
-  useEffect(() => {
-    // Simuler le chargement des données utilisateur
-    const userData = {
-      firstName: 'Jean'
-    };
-    setUser(userData);
-  }, []);
+  const quickActions = [
+    { title: 'Continuer', subtitle: 'Mes cours', icon: FiPlay, color: '#10b981', bgColor: '#10b981' },
+    { title: 'Explorer', subtitle: 'Nouveaux cours', icon: FiBookOpen, color: '#3b82f6', bgColor: '#3b82f6' },
+    { title: 'Profil', subtitle: 'Mon compte', icon: FiUser, color: '#8b5cf6', bgColor: '#8b5cf6' },
+    { title: 'Paramètres', subtitle: 'Configuration', icon: FiSettings, color: '#f59e0b', bgColor: '#f59e0b' }
+  ];
+
+  const progressData = [
+    { label: 'Mathématiques', percent: 75 },
+    { label: 'Français', percent: 60 },
+    { label: 'Sciences', percent: 45 }
+  ];
 
   return (
     <ResponsiveNavigation>
@@ -375,7 +353,7 @@ const Dashboard = () => {
           <Header>
             <WelcomeCard>
               <WelcomeTitle>
-                Bonjour, {user?.firstName || 'Étudiant'} ! 👋
+                Bonjour, {user?.firstName || 'étudiant'} ! ­
               </WelcomeTitle>
               <WelcomeSubtitle>
                 Prêt à continuer votre apprentissage ?
@@ -426,6 +404,27 @@ const Dashboard = () => {
           </Header>
 
           <ContentGrid>
+            <QuickActions>
+              <SectionTitle>
+                <FiZap />
+                Actions rapides
+              </SectionTitle>
+              <ActionsGrid>
+                {quickActions.map((action, index) => (
+                  <ActionItem key={index}>
+                    <ActionIcon bgColor={action.bgColor}>
+                      <action.icon />
+                    </ActionIcon>
+                    <ActionText>
+                      <ActionTitle>{action.title}</ActionTitle>
+                      <ActionSubtitle>{action.subtitle}</ActionSubtitle>
+                    </ActionText>
+                    <FiChevronRight color="#9ca3af" />
+                  </ActionItem>
+                ))}
+              </ActionsGrid>
+            </QuickActions>
+
             <RecentActivity>
               <SectionTitle>
                 <FiBell />
@@ -459,7 +458,7 @@ const Dashboard = () => {
                   <ProgressPercent>{item.percent}%</ProgressPercent>
                 </ProgressHeader>
                 <ProgressBar>
-                  <ProgressFill style={{width: `${item.percent}%`}} />
+                  <ProgressFill width={`${item.percent}%`} />
                 </ProgressBar>
               </ProgressItem>
             ))}

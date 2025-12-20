@@ -1,0 +1,17 @@
+services:
+  # Service Backend (Node.js + Express)
+  - type: web
+    name: educx-backend
+    runtime: node
+    plan: free
+    buildCommand: "npm install && cd client && npm install && npm run build && cd .."
+    startCommand: "node server.js"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DATABASE_URL
+        value: "mongodb+srv://jo123aze_db_user:8TwtEEEUrn4p6MRO@educx.ay7epci.mongodb.net/educx?appName=Educx"
+      - key: JWT_SECRET
+        value: "educx-jwt-secret-key-for-production"

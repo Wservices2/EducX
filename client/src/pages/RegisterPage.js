@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { API_CONFIG } from '../config';
 
 const RegisterPageContainer = styled.div`
   min-height: 100vh;
@@ -247,6 +248,35 @@ const LoginLink = styled(Link)`
   }
 `;
 
+const RegisterPrompt = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+`;
+
+const RegisterText = styled.span`
+  color: #6b7280;
+  font-size: 14px;
+  margin-right: 8px;
+`;
+
+const RegisterLink = styled.span`
+  color: #1e40af;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: color 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+  }
+`;
+
 const SubmitButton = styled(motion.button)`
   background: linear-gradient(135deg, #1e40af, #3b82f6);
   color: white;
@@ -402,7 +432,7 @@ const RegisterPage = () => {
     setIsLoading(true);
     
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.AUTH.REGISTER}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -638,9 +668,7 @@ const RegisterPage = () => {
 
             <RegisterPrompt>
               <RegisterText>Déjà un compte ?</RegisterText>
-              <Link to="/login">
-                <RegisterLink>Se connecter</RegisterLink>
-              </Link>
+              <RegisterLink onClick={() => navigate('/login')}>Se connecter</RegisterLink>
             </RegisterPrompt>
 
             <TermsText>
