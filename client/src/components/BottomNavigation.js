@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
@@ -686,5 +685,4 @@ const BottomNavigation = () => {
   );
 };
 
->>>>>>> 37b56642f1115aa25f6067ac55742b8556b69362
 export default BottomNavigation;

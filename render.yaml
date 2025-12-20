@@ -4,7 +4,7 @@ services:
     name: educx-backend
     runtime: node
     plan: free
-    buildCommand: "npm install && cd client && npm install && npm run build && cd .. && npx prisma db push"
+    buildCommand: "npm install && cd client && npm install && npm run build && cd .. && npm run build:client"
     startCommand: "node server.js"
     envVars:
       - key: NODE_ENV
