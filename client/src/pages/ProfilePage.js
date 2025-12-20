@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { FiUser, FiMail, FiCalendar, FiAward, FiTrendingUp, FiEdit3, FiCamera, FiShield } from 'react-icons/fi';
+import { FiUser, FiMail, FiCalendar, FiAward, FiTrendingUp, FiEdit3, FiCamera, FiShield, FiLogOut } from 'react-icons/fi';
 import ResponsiveNavigation from '../components/ResponsiveNavigation';
 
 const ProfileContainer = styled.div`
@@ -211,8 +211,31 @@ const ActionButton = styled.button`
   }
 `;
 
+const LogoutButton = styled.button`
+  width: 100%;
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(220, 38, 38, 0.4);
+  }
+`;
+
 const ProfilePage = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   const getUserInitials = () => {
     if (user) {
@@ -228,6 +251,10 @@ const ProfilePage = () => {
       month: 'long',
       day: 'numeric'
     });
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -371,6 +398,11 @@ const ProfilePage = () => {
           <FiCamera />
           Changer la photo de profil
         </ActionButton>
+
+        <LogoutButton onClick={handleLogout}>
+          <FiLogOut />
+          Déconnexion
+        </LogoutButton>
       </Content>
 
     </ProfileContainer>
