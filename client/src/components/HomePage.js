@@ -155,7 +155,7 @@ const Badge = styled.div`
   gap: 12px;
   background: linear-gradient(135deg, #06B750 0%, #15B706 100%);
   color: white;
-  padding: 12px 24px;
+  padding: 8px 16px;
   border-radius: 30px;
   font-size: clamp(14px, 3vw, 16px);
   font-weight: 700;
@@ -176,7 +176,7 @@ const Badge = styled.div`
   }
 
   @media (max-width: 480px) {
-    padding: 10px 20px;
+    padding: 6px 12px;
     margin-bottom: 24px;
   }
 `;
@@ -201,10 +201,10 @@ const HeroButtons = styled.div`
 const PrimaryButton = styled(motion.button)`
   background: linear-gradient(135deg, #072FA6 0%, #9E07A6 100%);
   color: white;
-  padding: clamp(16px, 4vw, 20px) clamp(32px, 6vw, 40px);
+  padding: clamp(13px, 4vw, 17px) clamp(29px, 6vw, 37px);
   border-radius: 50px;
   font-weight: 700;
-  font-size: clamp(16px, 3.5vw, 18px);
+  font-size: clamp(13px, 3.5vw, 15px);
   border: none;
   cursor: pointer;
   display: flex;
@@ -257,10 +257,10 @@ const PrimaryButton = styled(motion.button)`
 const SecondaryButton = styled(motion.button)`
   background: transparent;
   color: #072FA6;
-  padding: clamp(16px, 4vw, 20px) clamp(32px, 6vw, 40px);
+  padding: clamp(13px, 4vw, 17px) clamp(29px, 6vw, 37px);
   border-radius: 50px;
   font-weight: 700;
-  font-size: clamp(16px, 3.5vw, 18px);
+  font-size: clamp(13px, 3.5vw, 15px);
   border: 3px solid #072FA6;
   cursor: pointer;
   transition: all 0.3s ease;
