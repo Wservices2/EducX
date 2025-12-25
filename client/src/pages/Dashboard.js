@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   FiBookOpen, FiAward, FiClock, FiTrendingUp, FiPlay, FiStar,
@@ -209,28 +210,73 @@ const ActionItem = styled.div`
   align-items: center;
   gap: 16px;
   padding: 20px;
-  border-radius: 12px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
 
   &:hover {
-    background: #f3f4f6;
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+    border-color: #cbd5e1;
+
+    &::before {
+      opacity: 1;
+    }
+
+    svg:last-child {
+      transform: translateX(4px);
+      color: #64748b;
+    }
+  }
+
+  &:active {
+    transform: translateY(-2px) scale(1.01);
   }
 `;
 
 const ActionIcon = styled.div`
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   background: ${props => props.bgColor || '#667eea'};
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 20px;
+  font-size: 22px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+  }
+
+  svg {
+    position: relative;
+    z-index: 1;
+  }
 `;
 
 const ActionText = styled.div`
@@ -350,6 +396,7 @@ const ProgressFill = styled.div`
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     coursesCompleted: 12,
     hoursLearned: 45,
@@ -364,10 +411,10 @@ const Dashboard = () => {
   ]);
 
   const quickActions = [
-    { title: 'Continuer', subtitle: 'Mes cours', icon: FiPlay, color: '#10b981', bgColor: '#10b981' },
-    { title: 'Explorer', subtitle: 'Nouveaux cours', icon: FiBookOpen, color: '#3b82f6', bgColor: '#3b82f6' },
-    { title: 'Profil', subtitle: 'Mon compte', icon: FiUser, color: '#8b5cf6', bgColor: '#8b5cf6' },
-    { title: 'Paramètres', subtitle: 'Configuration', icon: FiSettings, color: '#f59e0b', bgColor: '#f59e0b' }
+    { title: 'Continuer', subtitle: 'Mes cours', icon: FiPlay, color: '#10b981', bgColor: '#10b981', path: '/classroom' },
+    { title: 'Explorer', subtitle: 'Nouveaux cours', icon: FiBookOpen, color: '#3b82f6', bgColor: '#3b82f6', path: '/courses' },
+    { title: 'Profil', subtitle: 'Mon compte', icon: FiUser, color: '#8b5cf6', bgColor: '#8b5cf6', path: '/profile' },
+    { title: 'Paramètres', subtitle: 'Configuration', icon: FiSettings, color: '#f59e0b', bgColor: '#f59e0b', path: '/settings' }
   ];
 
   const progressData = [
@@ -441,7 +488,7 @@ const Dashboard = () => {
               </SectionTitle>
               <ActionsGrid>
                 {quickActions.map((action, index) => (
-                  <ActionItem key={index}>
+                  <ActionItem key={index} onClick={() => navigate(action.path)}>
                     <ActionIcon bgColor={action.bgColor}>
                       <action.icon />
                     </ActionIcon>

@@ -9,17 +9,17 @@ const BottomNavContainer = styled.div`
   bottom: 20px;
   left: 20px;
   right: 20px;
-  height: 70px;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(20px);
-  border-radius: 24px;
+  height: 75px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(25px);
+  border-radius: 28px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  padding: 0 25px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
   z-index: 1000;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 
   @media (min-width: 769px) {
     display: none;
@@ -34,16 +34,25 @@ const NavItem = styled(NavLink)`
   text-decoration: none;
   color: #9ca3af;
   position: relative;
-  width: 50px;
-  height: 50px;
-  transition: all 0.3s ease;
+  width: 55px;
+  height: 55px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 16px;
 
   &.active {
     color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
     
     .icon-container {
       transform: translateY(-2px);
     }
+  }
+
+  &:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+    transform: translateY(-1px);
   }
 `;
 
@@ -55,35 +64,51 @@ const FloatingHomeWrapper = styled.div`
 `;
 
 const FloatingHomeButton = styled(NavLink)`
-  width: 60px;
-  height: 60px;
-  border-radius: 20px;
+  width: 65px;
+  height: 65px;
+  border-radius: 22px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 24px;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+  font-size: 26px;
+  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   border: 4px solid white;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 22px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+  }
+
+  svg {
+    position: relative;
+    z-index: 1;
+  }
 
   &.active {
     transform: scale(1.1);
-    box-shadow: 0 12px 25px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 14px 30px rgba(102, 126, 234, 0.5);
   }
 
   &:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px) scale(1.05);
+    box-shadow: 0 16px 35px rgba(102, 126, 234, 0.5);
   }
 `;
 
 const IconWrapper = styled(motion.div)`
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   margin-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.3s ease;
 `;
 
 const Label = styled(motion.span)`
@@ -95,6 +120,7 @@ const Label = styled(motion.span)`
   width: 100%;
   text-align: center;
   white-space: nowrap;
+  opacity: 0.8;
 `;
 
 const BottomNavigation = () => {
@@ -115,7 +141,7 @@ const BottomNavigation = () => {
         <IconWrapper className="icon-container">
           <FiBookOpen />
         </IconWrapper>
-        {location.pathname === '/classroom' && <Label initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Classe</Label>}
+        <Label>Classe</Label>
       </NavItem>
 
       {/* Messages */}
@@ -123,7 +149,7 @@ const BottomNavigation = () => {
         <IconWrapper className="icon-container">
           <FiMail />
         </IconWrapper>
-        {location.pathname === '/inbox' && <Label initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Messages</Label>}
+        <Label>Messages</Label>
       </NavItem>
 
       {/* CENTER FLOATING HOME BUTTON */}
@@ -138,7 +164,7 @@ const BottomNavigation = () => {
         <IconWrapper className="icon-container">
           <FiAward />
         </IconWrapper>
-        {location.pathname === '/subscription' && <Label initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Abonné</Label>}
+        <Label>Abonné</Label>
       </NavItem>
 
       {/* Profil */}
@@ -146,7 +172,7 @@ const BottomNavigation = () => {
         <IconWrapper className="icon-container">
           <FiUser />
         </IconWrapper>
-        {location.pathname === '/profile' && <Label initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Profil</Label>}
+        <Label>Profil</Label>
       </NavItem>
     </BottomNavContainer>
   );
