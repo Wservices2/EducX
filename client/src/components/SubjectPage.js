@@ -580,4 +580,340 @@ const VimeoIframe = styled.iframe`
   border: none;
 `;
 
+const SubjectPage = ({ subjectData }) => {
+  const [expandedChapters, setExpandedChapters] = useState({});
+  const [showVideoModal, setShowVideoModal] = useState(false);
+  const [showQuizModal, setShowQuizModal] = useState(false);
+  const [currentChapter, setCurrentChapter] = useState(null);
+  const [quizAnswers, setQuizAnswers] = useState({});
+  const [quizSubmitted, setQuizSubmitted] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [showVideo, setShowVideo] = useState(false);
+  const navigate = useNavigate();
+
+  const toggleChapter = (chapterId) => {
+    setExpandedChapters(prev => ({
+      ...prev,
+      [chapterId]: !prev[chapterId]
+    }));
+  };
+
+  const handleVideoClick = (chapter) => {
+    setCurrentChapter(chapter);
+    setShowVideoModal(true);
+  };
+
+  const confirmVideoPlay = () => {
+    setShowVideoModal(false);
+    setShowVideo(true);
+  };
+
+  const handleQuizClick = (chapter) => {
+    setCurrentChapter(chapter);
+    setShowQuizModal(true);
+    setQuizAnswers({});
+    setQuizSubmitted(false);
+    setQuizScore(0);
+  };
+
+  const selectAnswer = (questionIndex, answerIndex) => {
+    setQuizAnswers(prev => ({
+      ...prev,
+      [questionIndex]: answerIndex
+    }));
+  };
+
+  const submitQuiz = () => {
+    if (!currentChapter?.quiz) return;
+
+    const totalQuestions = currentChapter.quiz.questions.length;
+    let correctAnswers = 0;
+
+    currentChapter.quiz.questions.forEach((question, index) => {
+      if (quizAnswers[index] === question.correctAnswer) {
+        correctAnswers++;
+      }
+    });
+
+    const score = Math.round((correctAnswers / totalQuestions) * 100);
+    setQuizScore(score);
+    setQuizSubmitted(true);
+  };
+
+  const closeModals = () => {
+    setShowVideoModal(false);
+    setShowQuizModal(false);
+    setShowVideo(false);
+    setCurrentChapter(null);
+  };
+
+  if (!subjectData) {
+    return (
+      <SubjectPageContainer>
+        <MainContent>
+          <Header>
+            <SubjectTitle>Matière non trouvée</SubjectTitle>
+          </Header>
+        </MainContent>
+        <ResponsiveNavigation />
+      </SubjectPageContainer>
+    );
+  }
+
+  return (
+    <SubjectPageContainer>
+      <MainContent>
+        <Header>
+          <SubjectTitle
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            {subjectData.name}
+          </SubjectTitle>
+          <SubjectInfo
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            {subjectData.class} • {subjectData.series || 'Toutes séries'}
+          </SubjectInfo>
+        </Header>
+
+        <ChaptersContainer>
+          {subjectData.chapters.map((chapter, index) => (
+            <ChapterCard
+              key={chapter.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <ChapterHeader onClick={() => toggleChapter(chapter.id)}>
+                <ChapterTitle>
+                  <ChapterIcon>
+                    <FiBookOpen />
+                  </ChapterIcon>
+                  Chapitre {chapter.number} : {chapter.title}
+                </ChapterTitle>
+                <ExpandIcon
+                  animate={{ rotate: expandedChapters[chapter.id] ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <FiChevronDown />
+                </ExpandIcon>
+              </ChapterHeader>
+
+              <AnimatePresence>
+                {expandedChapters[chapter.id] && (
+                  <ChapterContent
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <SummarySection>
+                      <SummaryTitle>
+                        <FiTarget />
+                        En Bref
+                      </SummaryTitle>
+                      <SummaryText>{chapter.summary}</SummaryText>
+                    </SummarySection>
+
+                    <ActionsContainer>
+                      <ActionButton
+                        primary
+                        onClick={() => handleVideoClick(chapter)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <ActionIcon>
+                          <FiPlay />
+                          Vidéo du cours
+                        </ActionIcon>
+                        <ActionArrow />
+                      </ActionButton>
+
+                      <ActionButton
+                        onClick={() => handleQuizClick(chapter)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <ActionIcon>
+                          <FiTarget />
+                          Interrogation quiz
+                        </ActionIcon>
+                        <ActionArrow />
+                      </ActionButton>
+                    </ActionsContainer>
+                  </ChapterContent>
+                )}
+              </AnimatePresence>
+            </ChapterCard>
+          ))}
+        </ChaptersContainer>
+      </MainContent>
+
+      {/* Video Modal */}
+      <AnimatePresence>
+        {showVideoModal && (
+          <VideoModal
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeModals}
+          >
+            <VideoContent
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+            >
+              <CloseButton onClick={closeModals}>×</CloseButton>
+              <VideoTitle>
+                <FiPlay style={{ marginRight: '8px' }} />
+                Vidéo du cours
+              </VideoTitle>
+              <VideoMessage>
+                Cette vidéo est gratuite pour tous les étudiants. Voulez-vous commencer le cours maintenant ?
+              </VideoMessage>
+              <VideoButtons>
+                <VideoButton primary onClick={confirmVideoPlay}>
+                  Commencer le cours (0 FCFA)
+                </VideoButton>
+                <VideoButton onClick={closeModals}>
+                  Plus tard
+                </VideoButton>
+              </VideoButtons>
+            </VideoContent>
+          </VideoModal>
+        )}
+      </AnimatePresence>
+
+      {/* Video Player */}
+      <AnimatePresence>
+        {showVideo && currentChapter && (
+          <VideoModal
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeModals}
+          >
+            <VideoContent
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              style={{ maxWidth: '900px', padding: '20px' }}
+            >
+              <CloseButton onClick={closeModals}>×</CloseButton>
+              <VideoTitle>Chapitre {currentChapter.number} : {currentChapter.title}</VideoTitle>
+              <VimeoPlayer>
+                <VimeoIframe
+                  src={`https://player.vimeo.com/video/${currentChapter.videoId}?badge=0&autopause=0&player_id=0&app_id=58479`}
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  title={`Chapitre ${currentChapter.number} : ${currentChapter.title}`}
+                />
+              </VimeoPlayer>
+            </VideoContent>
+          </VideoModal>
+        )}
+      </AnimatePresence>
+
+      {/* Quiz Modal */}
+      <AnimatePresence>
+        {showQuizModal && currentChapter && (
+          <QuizModal
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={closeModals}
+          >
+            <QuizContent
+              onClick={(e) => e.stopPropagation()}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+            >
+              <CloseButton onClick={closeModals}>×</CloseButton>
+              <QuizTitle>
+                <FiTarget style={{ marginRight: '8px' }} />
+                Quiz - Chapitre {currentChapter.number}
+              </QuizTitle>
+
+              {!quizSubmitted ? (
+                <>
+                  {currentChapter.quiz?.questions.map((question, qIndex) => (
+                    <QuestionCard key={qIndex}>
+                      <QuestionText>{question.question}</QuestionText>
+                      <OptionsContainer>
+                        {question.options.map((option, oIndex) => (
+                          <OptionButton
+                            key={oIndex}
+                            selected={quizAnswers[qIndex] === oIndex}
+                            onClick={() => selectAnswer(qIndex, oIndex)}
+                          >
+                            {option}
+                          </OptionButton>
+                        ))}
+                      </OptionsContainer>
+                    </QuestionCard>
+                  ))}
+
+                  <QuizActions>
+                    <QuizButton onClick={closeModals}>Annuler</QuizButton>
+                    <QuizButton
+                      primary
+                      onClick={submitQuiz}
+                      disabled={Object.keys(quizAnswers).length !== currentChapter.quiz?.questions.length}
+                    >
+                      Soumettre
+                    </QuizButton>
+                  </QuizActions>
+                </>
+              ) : (
+                <ResultsContainer>
+                  <ScoreDisplay score={quizScore}>
+                    {quizScore}%
+                  </ScoreDisplay>
+                  <ScoreText>
+                    {quizScore >= 80 ? 'Excellent travail !' :
+                     quizScore >= 60 ? 'Bon travail, continuez !' :
+                     'Vous pouvez faire mieux, réessayez !'}
+                  </ScoreText>
+
+                  <CorrectionsContainer>
+                    <CorrectionTitle>Corrections</CorrectionTitle>
+                    {currentChapter.quiz?.questions.map((question, qIndex) => (
+                      <CorrectionItem key={qIndex} correct={quizAnswers[qIndex] === question.correctAnswer}>
+                        <CorrectionQuestion>{question.question}</CorrectionQuestion>
+                        <CorrectionAnswer correct={quizAnswers[qIndex] === question.correctAnswer}>
+                          Votre réponse : {question.options[quizAnswers[qIndex]]}
+                        </CorrectionAnswer>
+                        <CorrectionExplanation>
+                          Réponse correcte : {question.options[question.correctAnswer]}
+                          <br />
+                          {question.explanation}
+                        </CorrectionExplanation>
+                      </CorrectionItem>
+                    ))}
+                  </CorrectionsContainer>
+
+                  <QuizActions>
+                    <QuizButton onClick={closeModals}>Fermer</QuizButton>
+                    <QuizButton primary onClick={() => handleQuizClick(currentChapter)}>
+                      Refaire le quiz
+                    </QuizButton>
+                  </QuizActions>
+                </ResultsContainer>
+              )}
+            </QuizContent>
+          </QuizModal>
+        )}
+      </AnimatePresence>
+
+      <ResponsiveNavigation />
+    </SubjectPageContainer>
+  );
+};
+
 export default SubjectPage;
