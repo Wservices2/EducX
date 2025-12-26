@@ -9,17 +9,17 @@ const BottomNavContainer = styled.div`
   bottom: 20px;
   left: 20px;
   right: 20px;
-  height: 75px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(25px);
-  border-radius: 28px;
+  height: 80px;
+  background: #F9FAFB;
+  backdrop-filter: blur(20px);
+  border-radius: 20px 20px 0 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 25px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+  padding: 12px 25px 20px;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
   z-index: 1000;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 
   @media (min-width: 769px) {
     display: none;
@@ -34,93 +34,103 @@ const NavItem = styled(NavLink)`
   text-decoration: none;
   color: #9ca3af;
   position: relative;
-  width: 55px;
-  height: 55px;
+  width: 60px;
+  height: 60px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 16px;
+  border-radius: 12px;
 
   &.active {
-    color: #667eea;
-    background: rgba(102, 126, 234, 0.1);
-    transform: translateY(-2px);
+    color: #5B5FEF;
     
     .icon-container {
-      transform: translateY(-2px);
+      transform: scale(1.05);
+    }
+    
+    .label {
+      color: #1f2937;
+      font-weight: 600;
     }
   }
 
   &:hover {
-    color: #667eea;
-    background: rgba(102, 126, 234, 0.05);
-    transform: translateY(-1px);
+    color: #5B5FEF;
   }
 `;
 
 const FloatingHomeWrapper = styled.div`
   position: relative;
-  top: -25px;
   width: 60px;
   height: 60px;
 `;
 
 const FloatingHomeButton = styled(NavLink)`
-  width: 65px;
-  height: 65px;
-  border-radius: 22px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(91, 95, 239, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 26px;
-  box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  border: 4px solid white;
+  color: #5B5FEF;
+  font-size: 22px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
 
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 22px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
-  }
-
-  svg {
-    position: relative;
-    z-index: 1;
-  }
-
   &.active {
-    transform: scale(1.1);
-    box-shadow: 0 14px 30px rgba(102, 126, 234, 0.5);
+    background: rgba(91, 95, 239, 0.15);
+    transform: scale(1.05);
+    
+    &::before {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #5B5FEF;
+    }
   }
 
   &:hover {
-    transform: translateY(-6px) scale(1.05);
-    box-shadow: 0 16px 35px rgba(102, 126, 234, 0.5);
+    background: rgba(91, 95, 239, 0.12);
+    transform: scale(1.02);
   }
 `;
 
 const IconWrapper = styled(motion.div)`
-  font-size: 1.5rem;
-  margin-bottom: 0;
+  font-size: 1.6rem;
+  margin-bottom: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
 const Label = styled(motion.span)`
-  font-size: 0.65rem;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 500;
   margin-top: 2px;
   position: absolute;
-  bottom: -15px;
+  bottom: -16px;
   width: 100%;
   text-align: center;
   white-space: nowrap;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0.8;
+`;
+
+const ActiveIndicator = styled.div`
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #5B5FEF;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
 const BottomNavigation = () => {
@@ -141,7 +151,8 @@ const BottomNavigation = () => {
         <IconWrapper className="icon-container">
           <FiBookOpen />
         </IconWrapper>
-        <Label>Classe</Label>
+        <Label className="label">Classe</Label>
+        {location.pathname === '/classroom' && <ActiveIndicator />}
       </NavItem>
 
       {/* Messages */}
@@ -149,7 +160,8 @@ const BottomNavigation = () => {
         <IconWrapper className="icon-container">
           <FiMail />
         </IconWrapper>
-        <Label>Messages</Label>
+        <Label className="label">Messages</Label>
+        {location.pathname === '/inbox' && <ActiveIndicator />}
       </NavItem>
 
       {/* CENTER FLOATING HOME BUTTON */}
@@ -164,7 +176,8 @@ const BottomNavigation = () => {
         <IconWrapper className="icon-container">
           <FiAward />
         </IconWrapper>
-        <Label>Abonné</Label>
+        <Label className="label">Abonné</Label>
+        {location.pathname === '/subscription' && <ActiveIndicator />}
       </NavItem>
 
       {/* Profil */}
@@ -172,7 +185,8 @@ const BottomNavigation = () => {
         <IconWrapper className="icon-container">
           <FiUser />
         </IconWrapper>
-        <Label>Profil</Label>
+        <Label className="label">Profil</Label>
+        {location.pathname === '/profile' && <ActiveIndicator />}
       </NavItem>
     </BottomNavContainer>
   );

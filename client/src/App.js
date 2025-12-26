@@ -14,6 +14,12 @@ import SubscriptionPage from './pages/SubscriptionPage';
 import CoursesPage from './pages/CoursesPage';
 import ProfilePage from './pages/ProfilePage';
 import SettingsPage from './pages/SettingsPage';
+import Mathematiques6emePage from './pages/Mathematiques6emePage';
+import Francais6emePage from './pages/Francais6emePage';
+import Histoire6emePage from './pages/Histoire6emePage';
+import PhysiqueChimie2ndePage from './pages/PhysiqueChimie2ndePage';
+import SVT2ndePage from './pages/SVT2ndePage';
+import PhilosophieTerminalePage from './pages/PhilosophieTerminalePage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 
@@ -130,6 +136,43 @@ function App() {
             <Route path="/settings" element={
               <ProtectedRoute>
                 <SettingsPage />
+              </ProtectedRoute>
+            } />
+            
+            {/* Routes des matières */}
+            <Route path="/mathematiques-6eme" element={
+              <ProtectedRoute>
+                <Mathematiques6emePage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/francais-6eme" element={
+              <ProtectedRoute>
+                <Francais6emePage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/histoire-6eme" element={
+              <ProtectedRoute>
+                <Histoire6emePage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/physique-chimie-2nde" element={
+              <ProtectedRoute>
+                <PhysiqueChimie2ndePage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/svt-2nde" element={
+              <ProtectedRoute>
+                <SVT2ndePage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/philosophie-terminale" element={
+              <ProtectedRoute>
+                <PhilosophieTerminalePage />
               </ProtectedRoute>
             } />
 

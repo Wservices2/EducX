@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { API_CONFIG } from '../config';
+import { getLoginSessionData } from '../utils/networkUtils';
 
 const AuthContext = createContext();
 
@@ -65,7 +66,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   // Fonction de connexion
-  const login = async (email, password) => {
+  const login = async (email, password, operator = null) => {
     const url = getApiUrl(API_CONFIG.ENDPOINTS.AUTH.LOGIN);
     const result = await makeRequest(url, {
       method: 'POST',
@@ -77,6 +78,28 @@ export const AuthProvider = ({ children }) => {
       setUser(result.data.data.user);
       localStorage.setItem('token', result.data.data.token);
       localStorage.setItem('user', JSON.stringify(result.data.data.user));
+
+      // Enregistrer la session de connexion avec les données réseau
+      try {
+        const sessionData = getLoginSessionData();
+        const sessionUrl = getApiUrl('/auth/login-session');
+        await makeRequest(sessionUrl, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${result.data.data.token}`,
+          },
+          body: JSON.stringify({
+            userId: result.data.data.user.id,
+            operator: operator || sessionData.networkType, // Utiliser l'opérateur fourni ou détecter automatiquement
+            deviceInfo: sessionData.deviceInfo,
+            userAgent: sessionData.userAgent,
+            loginAt: sessionData.timestamp
+          }),
+        });
+      } catch (sessionError) {
+        console.warn('Failed to save login session data:', sessionError);
+        // Ne pas échouer la connexion si l'enregistrement de session échoue
+      }
     }
 
     return result;

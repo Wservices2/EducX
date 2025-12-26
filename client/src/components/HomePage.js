@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { FiPlay, FiArrowRight, FiBookOpen, FiAward, FiUsers, FiTarget, FiStar, FiZap, FiShield, FiTrendingUp, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
+import { loadValidSlideshowImages } from '../utils/imageLoader';
 
 const HomePageContainer = styled.div`
   width: 100%;
@@ -712,22 +713,40 @@ const CTAButton = styled(motion.button)`
 const HomePage = () => {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [slideshowImages, setSlideshowImages] = useState([]);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
 
-  const slideshowImages = [
-    'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
-    'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
-    'https://images.pexels.com/photos/814124/pexels-photo-814124.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
-    'https://images.pexels.com/photos/267885/pexels-photo-267885.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
-    'https://images.pexels.com/photos/1181467/pexels-photo-1181467.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2'
-  ];
-
+  // Load images on component mount
   useEffect(() => {
+    const loadImages = async () => {
+      try {
+        const images = await loadValidSlideshowImages();
+        setSlideshowImages(images);
+        setImagesLoaded(true);
+      } catch (error) {
+        console.error('Error loading slideshow images:', error);
+        // Fallback to default images
+        setSlideshowImages([
+          'https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2',
+          'https://images.pexels.com/photos/5212345/pexels-photo-5212345.jpeg?auto=compress&cs=tinysrgb&w=1000&h=750&dpr=2'
+        ]);
+        setImagesLoaded(true);
+      }
+    };
+
+    loadImages();
+  }, []);
+
+  // Auto-slide effect - only start when images are loaded
+  useEffect(() => {
+    if (!imagesLoaded || slideshowImages.length === 0) return;
+
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slideshowImages.length);
     }, 4000);
 
     return () => clearInterval(timer);
-  }, [slideshowImages.length]);
+  }, [imagesLoaded, slideshowImages.length]);
 
   const goToSlide = (index) => {
     setCurrentSlide(index);
@@ -869,7 +888,7 @@ const HomePage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              Rejoignez des milliers d'étudiants qui réussissent grâce à notre plateforme innovante et nos contenus adaptés au programme béninois.
+              Rejoignez des milliers de collégiens ou lycéens qui réussissent grâce à notre plateforme innovante et nos contenus adaptés au programme béninois.
             </motion.p>
             <HeroButtons>
               <PrimaryButton
@@ -1091,7 +1110,7 @@ const HomePage = () => {
           >
             <CTATitle>Prêt à transformer votre apprentissage ?</CTATitle>
             <CTASubtitle>
-              Rejoignez des milliers d'étudiants qui réussissent avec EducX
+              Rejoignez des milliers de collégiens ou lycéens qui réussissent avec EducX
             </CTASubtitle>
             <CTAButton
               whileHover={{ scale: 1.05 }}

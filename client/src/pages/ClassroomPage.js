@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import {
   FiBookOpen, FiPlay, FiTarget, FiChevronRight, FiChevronLeft,
   FiZap, FiShield, FiPlus, FiMap, FiMessageCircle
@@ -548,9 +549,39 @@ const ClassroomPage = () => {
     { id: 'francais', name: 'Français', description: 'Littérature, grammaire, expression', icon: FiBookOpen },
     { id: 'anglais', name: 'Anglais', description: 'Langue vivante étrangère', icon: FiMessageCircle },
     { id: 'histoire', name: 'Histoire-Géo', description: 'Histoire et géographie', icon: FiMap },
-    { id: 'sciences', name: 'Sciences', description: 'Physique, chimie, SVT', icon: FiZap },
-    { id: 'philosophie', name: 'Philosophie', description: 'Pensée critique et logique', icon: FiShield }
+    { id: 'sciences', name: 'Sciences', description: 'Physique, chimie, biologie', icon: FiZap },
+    { id: 'philosophie', name: 'Philosophie', description: 'Pensée critique et logique', icon: FiShield },
+    { id: 'pct', name: 'PCT', description: 'Physique Chimie Technologie', icon: FiZap },
+    { id: 'svt', name: 'SVT', description: 'Sciences de la Vie et de la Terre', icon: FiZap }
   ];
+
+  // Fonction pour obtenir les matières disponibles selon la classe et la série
+  const getAvailableSubjects = (classId, seriesId) => {
+    const baseSubjects = subjects.filter(subject => {
+      // La philosophie n'est disponible qu'à partir de la Seconde
+      if (subject.id === 'philosophie') {
+        return ['seconde', 'premiere', 'terminale'].includes(classId);
+      }
+
+      // PCT et SVT sont des matières distinctes, pas communes
+      if (subject.id === 'pct' || subject.id === 'svt') {
+        return ['seconde', 'premiere', 'terminale'].includes(classId);
+      }
+
+      // Les autres matières sont disponibles pour tous les niveaux
+      return subject.id !== 'sciences' || !['seconde', 'premiere', 'terminale'].includes(classId);
+    });
+
+    // Filtrage supplémentaire selon la série pour les classes lycée
+    if (['seconde', 'premiere', 'terminale'].includes(classId) && seriesId) {
+      // Les séries techniques (F3, F4, etc.) n'ont pas philosophie
+      if (seriesId.startsWith('F') && seriesId !== 'F2') {
+        return baseSubjects.filter(subject => subject.id !== 'philosophie');
+      }
+    }
+
+    return baseSubjects;
+  };
 
   const myCourses = [
     {
@@ -593,13 +624,29 @@ const ClassroomPage = () => {
     setSelectedSeries('');
   };
 
+  const navigate = useNavigate();
+
   const handleSeriesSelect = (seriesId) => {
     setSelectedSeries(seriesId);
   };
 
-  const handleSubjectSelect = () => {
-    // Ici on pourrait rediriger vers la page des cours de cette matière
-    console.log('Cours sélectionnés:', { selectedClass, selectedSeries });
+  const handleSubjectSelect = (subject) => {
+    // Rediriger vers la page de la matière sélectionnée
+    const subjectRoutes = {
+      'Mathématiques': 'mathematiques-6eme',
+      'Français': 'francais-6eme',
+      'Histoire': 'histoire-6eme',
+      'Physique-Chimie': 'physique-chimie-2nde',
+      'SVT': 'svt-2nde',
+      'Philosophie': 'philosophie-terminale'
+    };
+
+    const route = subjectRoutes[subject.name];
+    if (route) {
+      navigate(`/${route}`);
+    } else {
+      console.log('Cours sélectionnés:', { selectedClass, selectedSeries, subject });
+    }
   };
 
   return (
@@ -714,10 +761,10 @@ const ClassroomPage = () => {
                         {['seconde', 'premiere', 'terminale'].includes(selectedClass) ? '3. ' : '2. '}Choisissez une matière
                       </h3>
                       <SubjectGrid>
-                        {subjects.map((subject, index) => (
+                        {getAvailableSubjects(selectedClass, selectedSeries).map((subject, index) => (
                           <SubjectCard
                             key={subject.id}
-                            onClick={handleSubjectSelect}
+                            onClick={() => handleSubjectSelect(subject)}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             initial={{ opacity: 0, y: 20 }}

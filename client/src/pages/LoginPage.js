@@ -160,6 +160,47 @@ const Input = styled.input`
   }
 `;
 
+const Select = styled.select`
+  width: 100%;
+  padding: clamp(14px, 4vw, 16px) clamp(14px, 4vw, 16px) clamp(14px, 4vw, 16px) clamp(45px, 10vw, 50px);
+  border: 2px solid ${props => props.error ? '#ef4444' : '#e5e7eb'};
+  border-radius: clamp(10px, 3vw, 12px);
+  font-size: clamp(15px, 4vw, 16px);
+  font-family: inherit;
+  background: #f9fafb;
+  color: #374151;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+
+  @media (max-width: 480px) {
+    padding: 14px 14px 14px 45px;
+    font-size: 15px;
+    border-radius: 10px;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: #1e40af;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+  }
+
+  &:hover {
+    border-color: #9ca3af;
+  }
+
+  option {
+    padding: 12px;
+    background: white;
+    color: #374151;
+  }
+`;
+
 const PasswordToggle = styled.button`
   position: absolute;
   right: 16px;
@@ -413,13 +454,41 @@ const SocialButton = styled.button`
   }
 `;
 
+const NetworkInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  border-radius: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  margin: 16px 0;
+  text-align: center;
+  line-height: 1.4;
+
+  svg {
+    color: #3b82f6;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 11px;
+    padding: 10px 12px;
+    margin: 12px 0;
+  }
+`;
+
 const LoginPage = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false
+    rememberMe: false,
+    operator: '' // Ajout du champ opérateur
   });
 
   const [errors, setErrors] = useState({});
@@ -455,6 +524,10 @@ const LoginPage = () => {
       newErrors.password = 'Le mot de passe est requis';
     }
 
+    if (!formData.operator) {
+      newErrors.operator = 'Veuillez sélectionner votre opérateur mobile';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -467,7 +540,7 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const result = await login(formData.email, formData.password);
+      const result = await login(formData.email, formData.password, formData.operator);
 
       if (result.success) {
         console.log('Login successful:', result.data);
@@ -576,6 +649,35 @@ const LoginPage = () => {
               )}
             </InputGroup>
 
+            <InputGroup>
+              <Label>Votre opérateur mobile</Label>
+              <InputContainer>
+                <InputIcon>
+                  📱
+                </InputIcon>
+                <Select
+                  name="operator"
+                  value={formData.operator}
+                  onChange={handleInputChange}
+                  error={errors.operator}
+                >
+                  <option value="">Sélectionnez votre opérateur</option>
+                  <option value="MTN">MTN Benin</option>
+                  <option value="Moov">Moov</option>
+                  <option value="Celtis">Celtis</option>
+                  <option value="Autre">Autre</option>
+                </Select>
+              </InputContainer>
+              {errors.operator && (
+                <ErrorMessage
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  {errors.operator}
+                </ErrorMessage>
+              )}
+            </InputGroup>
+
             {errors.general && (
               <ErrorMessage
                 initial={{ opacity: 0, y: -10 }}
@@ -603,6 +705,11 @@ const LoginPage = () => {
                 </>
               )}
             </SubmitButton>
+
+            <NetworkInfo>
+              <FiUser size={14} />
+              Nous analysons l'usage des opérateurs mobiles pour améliorer nos services
+            </NetworkInfo>
 
             <SocialLogin>
               <SocialTitle>
