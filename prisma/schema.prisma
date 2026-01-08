@@ -27,6 +27,7 @@ model User {
   enrolledCourses CourseEnrollment[]
   createdCourses Course[]           @relation("CourseCreator")
   certificates   Certificate[]
+  loginSessions  LoginSession[]
 
   @@map("users")
 }
@@ -108,6 +109,19 @@ model Certificate {
 
   @@unique([userId, courseId])
   @@map("certificates")
+}
+
+model LoginSession {
+  id          String   @id @default(cuid()) @map("_id")
+  userId      String   @map("user_id")
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  operator    String   @map("operator") // MTN, Moov, Celtis, etc.
+  userAgent   String?  @map("user_agent")
+  ipAddress   String?  @map("ip_address")
+  deviceInfo  String?  @map("device_info")
+  loginAt     DateTime @default(now()) @map("login_at")
+
+  @@map("login_sessions")
 }
 
 // Enums removed - using String type for MongoDB compatibility

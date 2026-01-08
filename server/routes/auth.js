@@ -259,6 +259,34 @@ router.put('/profile', require('../middleware/auth').authenticateToken, asyncHan
   });
 }));
 
+// Route pour enregistrer une session de connexion
+router.post('/login-session', asyncHandler(async (req, res) => {
+  const { userId, operator, deviceInfo, userAgent, loginAt } = req.body;
+
+  // Validation basique
+  if (!userId || !operator) {
+    return res.status(400).json({
+      message: 'userId et operator sont requis'
+    });
+  }
+
+  // Créer la session de connexion
+  const loginSession = await prisma.loginSession.create({
+    data: {
+      userId,
+      operator,
+      deviceInfo,
+      userAgent,
+      loginAt: loginAt ? new Date(loginAt) : new Date()
+    }
+  });
+
+  res.json({
+    message: 'Session de connexion enregistrée',
+    sessionId: loginSession.id
+  });
+}));
+
 // Route de déconnexion (côté client principalement)
 router.post('/logout', (req, res) => {
   res.json({

@@ -4,22 +4,26 @@ import { NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiHome, FiBookOpen, FiMail, FiUser, FiAward } from 'react-icons/fi';
 
-const BottomNavContainer = styled.div`
+const BottomNavContainer = styled(motion.div)`
   position: fixed;
-  bottom: 20px;
+  bottom: 24px;
   left: 20px;
   right: 20px;
-  height: 80px;
-  background: #F9FAFB;
+  height: 72px;
+  background: ${({ theme }) => theme.mode === 'dark' ? 'rgba(31, 41, 55, 0.9)' : 'rgba(255, 255, 255, 0.9)'};
   backdrop-filter: blur(20px);
-  border-radius: 20px 20px 0 0;
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 25px 20px;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+  padding: 0 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  max-width: 480px;
+  margin: 0 auto;
+  transition: background 0.3s ease, border-color 0.3s ease;
 
   @media (min-width: 769px) {
     display: none;
@@ -32,105 +36,86 @@ const NavItem = styled(NavLink)`
   align-items: center;
   justify-content: center;
   text-decoration: none;
-  color: #9ca3af;
+  color: ${({ theme }) => theme.colors.textSecondary};
   position: relative;
-  width: 60px;
-  height: 60px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 12px;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+  overflow: hidden;
 
   &.active {
-    color: #5B5FEF;
-    
-    .icon-container {
-      transform: scale(1.05);
-    }
-    
-    .label {
-      color: #1f2937;
-      font-weight: 600;
-    }
+    color: ${({ theme }) => theme.colors.primary};
   }
 
   &:hover {
-    color: #5B5FEF;
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
 const FloatingHomeWrapper = styled.div`
   position: relative;
-  width: 60px;
-  height: 60px;
+  width: 72px;
+  height: 72px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -40px; /* Floats above */
+  flex-shrink: 0;
 `;
 
 const FloatingHomeButton = styled(NavLink)`
-  width: 60px;
-  height: 60px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
-  background: rgba(91, 95, 239, 0.1);
+  background: ${({ theme }) => theme.colors.headerGradient};
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #5B5FEF;
-  font-size: 22px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: white;
+  font-size: 26px;
+  box-shadow: 0 12px 25px rgba(79, 70, 229, 0.5);
   position: relative;
-
-  &.active {
-    background: rgba(91, 95, 239, 0.15);
-    transform: scale(1.05);
-    
-    &::before {
-      content: '';
-      position: absolute;
-      bottom: -8px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #5B5FEF;
-    }
-  }
+  z-index: 10;
+  border: 4px solid ${({ theme }) => theme.mode === 'dark' ? '#1f2937' : '#ffffff'};
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.3s ease;
 
   &:hover {
-    background: rgba(91, 95, 239, 0.12);
-    transform: scale(1.02);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(79, 70, 229, 0.6);
+  }
+
+  &.active {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(79, 70, 229, 0.6);
+    border-color: ${({ theme }) => theme.mode === 'dark' ? '#374151' : '#ffffff'};
   }
 `;
 
 const IconWrapper = styled(motion.div)`
-  font-size: 1.6rem;
-  margin-bottom: 2px;
+  font-size: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  margin-bottom: 2px;
 `;
 
 const Label = styled(motion.span)`
-  font-size: 11px;
-  font-weight: 500;
-  margin-top: 2px;
-  position: absolute;
-  bottom: -16px;
-  width: 100%;
+  font-size: 10px;
+  font-weight: 600;
   text-align: center;
-  white-space: nowrap;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 0.8;
+  opacity: 0.7;
 `;
 
-const ActiveIndicator = styled.div`
-  position: absolute;
-  bottom: -22px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 6px;
+const ActiveDot = styled(motion.div)`
+  width: 4px;
+  height: 4px;
+  background: ${({ theme }) => theme.colors.primary};
   border-radius: 50%;
-  background: #5B5FEF;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 4px;
+  position: absolute;
+  bottom: 8px;
 `;
 
 const BottomNavigation = () => {
@@ -138,56 +123,68 @@ const BottomNavigation = () => {
 
   const navItems = [
     { path: '/classroom', icon: FiBookOpen, label: 'Classe' },
-    { path: '/inbox', icon: FiMail, label: 'Messages' },
-    // Home is handled separately
-    { path: '/subscription', icon: FiAward, label: 'Abonnement' },
+    { path: '/inbox', icon: FiMail, label: 'Chat' },
+    { path: '/dashboard', icon: FiHome, label: 'Home', isMain: true },
+    { path: '/subscription', icon: FiAward, label: 'Pro' },
     { path: '/profile', icon: FiUser, label: 'Profil' }
   ];
 
   return (
-    <BottomNavContainer>
-      {/* Classe */}
-      <NavItem to="/classroom" className={({ isActive }) => isActive ? 'active' : ''}>
-        <IconWrapper className="icon-container">
-          <FiBookOpen />
-        </IconWrapper>
-        <Label className="label">Classe</Label>
-        {location.pathname === '/classroom' && <ActiveIndicator />}
-      </NavItem>
+    <BottomNavContainer
+      initial={{ y: 100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+    >
+      {navItems.map((item) => {
+        const isActive = location.pathname === item.path;
 
-      {/* Messages */}
-      <NavItem to="/inbox" className={({ isActive }) => isActive ? 'active' : ''}>
-        <IconWrapper className="icon-container">
-          <FiMail />
-        </IconWrapper>
-        <Label className="label">Messages</Label>
-        {location.pathname === '/inbox' && <ActiveIndicator />}
-      </NavItem>
+        if (item.isMain) {
+          return (
+            <FloatingHomeWrapper key={item.path}>
+              <FloatingHomeButton
+                to={item.path}
+                className={isActive ? 'active' : ''}
+              >
+                <item.icon />
+              </FloatingHomeButton>
+            </FloatingHomeWrapper>
+          );
+        }
 
-      {/* CENTER FLOATING HOME BUTTON */}
-      <FloatingHomeWrapper>
-        <FloatingHomeButton to="/dashboard" className={({ isActive }) => isActive ? 'active' : ''}>
-          <FiHome />
-        </FloatingHomeButton>
-      </FloatingHomeWrapper>
-
-      {/* Abonnement */}
-      <NavItem to="/subscription" className={({ isActive }) => isActive ? 'active' : ''}>
-        <IconWrapper className="icon-container">
-          <FiAward />
-        </IconWrapper>
-        <Label className="label">Abonné</Label>
-        {location.pathname === '/subscription' && <ActiveIndicator />}
-      </NavItem>
-
-      {/* Profil */}
-      <NavItem to="/profile" className={({ isActive }) => isActive ? 'active' : ''}>
-        <IconWrapper className="icon-container">
-          <FiUser />
-        </IconWrapper>
-        <Label className="label">Profil</Label>
-        {location.pathname === '/profile' && <ActiveIndicator />}
-      </NavItem>
+        return (
+          <NavItem
+            key={item.path}
+            to={item.path}
+            className={isActive ? 'active' : ''}
+          >
+            <IconWrapper
+              animate={{
+                y: isActive ? -2 : 0,
+                scale: isActive ? 1.1 : 1,
+                // Color is handled by styled-component but we can override for animation if needed
+              }}
+              transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+            >
+              <item.icon />
+            </IconWrapper>
+            <Label
+              animate={{
+                opacity: isActive ? 1 : 0.5,
+                fontWeight: isActive ? 600 : 500,
+                // Color is handled by parent color prop inheriting
+              }}
+            >
+              {item.label}
+            </Label>
+            {isActive && (
+              <ActiveDot
+                layoutId="activeDot"
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              />
+            )}
+          </NavItem>
+        );
+      })}
     </BottomNavContainer>
   );
 };
