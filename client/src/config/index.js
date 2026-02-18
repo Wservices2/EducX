@@ -2,7 +2,9 @@
 
 // Configuration de l'API
 export const API_CONFIG = {
-  BASE_URL: process.env.REACT_APP_API_URL || 'http://localhost:5000',
+  // Use REACT_APP_API_URL when set (production), otherwise use relative paths
+  // so the client will call the same host (e.g. /api/...) which works on Vercel.
+  BASE_URL: process.env.REACT_APP_API_URL || '',
   TIMEOUT: 10000,
   ENDPOINTS: {
     AUTH: {
