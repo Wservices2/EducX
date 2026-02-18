@@ -16,11 +16,11 @@ const prisma = new PrismaClient();
 // Middleware de sécurité
 app.use(helmet());
 
-// Rate limiting
-const limiter = rateLimit({
+// Rate limiting - disabled in development
+const limiter = process.env.NODE_ENV === 'production' ? rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100 // limite chaque IP à 100 requêtes par windowMs
-});
+}) : (req, res, next) => next();
 app.use(limiter);
 
 // Configuration CORS

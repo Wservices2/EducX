@@ -4,7 +4,8 @@ const nodemailer = require('nodemailer');
 
 // Génération de token JWT
 const generateToken = (payload) => {
-  return jwt.sign(payload, process.env.JWT_SECRET, {
+  const secret = process.env.JWT_SECRET || 'educx-secret-key';
+  return jwt.sign(payload, secret, {
     expiresIn: process.env.JWT_EXPIRE || '7d'
   });
 };

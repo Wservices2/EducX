@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-  FiBookOpen, FiAward, FiClock, FiTrendingUp, FiPlay, FiStar,
-  FiUsers, FiCalendar, FiTarget, FiCheckCircle, FiMail, FiHome,
-  FiCreditCard, FiUser, FiBell, FiSettings, FiLogOut, FiHeart,
-  FiZap, FiShield, FiGift, FiSun, FiArrowRight, FiBarChart,
-  FiChevronRight, FiPlus, FiMoreHorizontal
+  FiBookOpen, FiAward, FiClock, FiTrendingUp, FiPlay,
+  FiUser, FiBell, FiSettings, FiZap, FiBarChart,
+  FiChevronRight
 } from 'react-icons/fi';
 import ResponsiveNavigation from '../components/ResponsiveNavigation';
 
@@ -395,32 +392,106 @@ const ProgressFill = styled.div`
 `;
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const navigate = useNavigate();
   const [stats, setStats] = useState({
-    coursesCompleted: 12,
-    hoursLearned: 45,
-    certificates: 3,
-    streak: 7
+    coursesEnrolled: 0,
+    coursesCompleted: 0,
+    certificates: 0,
+    hoursLearned: 0,
+    streak: 0,
+    averageProgress: 0
   });
+  const [notifications, setNotifications] = useState([]);
+  const [progressData, setProgressData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [notifications, setNotifications] = useState([
-    { id: 1, title: 'Nouveau cours disponible', time: 'Il y a 2h', icon: FiBookOpen },
-    { id: 2, title: 'Certificat obtenu', time: 'Il y a 1 jour', icon: FiAward },
-    { id: 3, title: 'Rappel de cours', time: 'Il y a 2 jours', icon: FiClock }
-  ]);
+  // Rediriger si non connecté
+  useEffect(() => {
+    if (!user || !token) {
+      console.log('Utilisateur non connecté, redirection vers /login');
+      navigate('/login');
+      return;
+    }
+  }, [user, token, navigate]);
+
+  // Charger les données du dashboard
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        if (!token) {
+          console.log('Token non disponible, chargement annulé');
+          return;
+        }
+
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        };
+
+        console.log('Chargement des données du dashboard avec token:', token.substring(0, 20) + '...');
+
+        const [statsRes, activityRes, progressRes] = await Promise.all([
+          fetch('http://localhost:5000/api/dashboard/stats', { headers }),
+          fetch('http://localhost:5000/api/dashboard/recent-activity', { headers }),
+          fetch('http://localhost:5000/api/dashboard/progress', { headers })
+        ]);
+
+        console.log('Réponses API:', {
+          stats: statsRes.status,
+          activity: activityRes.status,
+          progress: progressRes.status
+        });
+
+        if (!statsRes.ok || !activityRes.ok || !progressRes.ok) {
+          const errorData = await Promise.all([
+            statsRes.ok ? null : statsRes.json(),
+            activityRes.ok ? null : activityRes.json(),
+            progressRes.ok ? null : progressRes.json()
+          ]);
+          console.error('Erreurs API:', errorData);
+          throw new Error('Erreur lors du chargement des données');
+        }
+
+        const [statsData, activityData, progressData] = await Promise.all([
+          statsRes.json(),
+          activityRes.json(),
+          progressRes.json()
+        ]);
+
+        console.log('Données reçues:', { statsData, activityData, progressData });
+
+        setStats(statsData);
+        setNotifications(activityData);
+        setProgressData(progressData);
+      } catch (error) {
+        console.error('Erreur lors du chargement des données du dashboard:', error);
+        // En cas d'erreur, utiliser des données par défaut
+        setStats({
+          coursesEnrolled: 0,
+          coursesCompleted: 0,
+          certificates: 0,
+          hoursLearned: 0,
+          streak: 0,
+          averageProgress: 0
+        });
+        setNotifications([]);
+        setProgressData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user && token) {
+      fetchDashboardData();
+    }
+  }, [token, user]);
 
   const quickActions = [
     { title: 'Continuer', subtitle: 'Mes cours', icon: FiPlay, color: '#10b981', bgColor: '#10b981', path: '/classroom' },
     { title: 'Explorer', subtitle: 'Nouveaux cours', icon: FiBookOpen, color: '#3b82f6', bgColor: '#3b82f6', path: '/courses' },
     { title: 'Profil', subtitle: 'Mon compte', icon: FiUser, color: '#8b5cf6', bgColor: '#8b5cf6', path: '/profile' },
     { title: 'Paramètres', subtitle: 'Configuration', icon: FiSettings, color: '#f59e0b', bgColor: '#f59e0b', path: '/settings' }
-  ];
-
-  const progressData = [
-    { label: 'Mathématiques', percent: 75 },
-    { label: 'Français', percent: 60 },
-    { label: 'Sciences', percent: 45 }
   ];
 
   return (
@@ -444,8 +515,8 @@ const Dashboard = () => {
                     <FiBookOpen />
                   </StatIcon>
                 </StatHeader>
-                <StatValue>{stats.coursesCompleted}</StatValue>
-                <StatLabel>Cours terminés</StatLabel>
+                <StatValue>{loading ? '...' : stats.coursesEnrolled}</StatValue>
+                <StatLabel>Cours inscrits</StatLabel>
               </StatCard>
 
               <StatCard color="#f59e0b">
@@ -454,7 +525,7 @@ const Dashboard = () => {
                     <FiClock />
                   </StatIcon>
                 </StatHeader>
-                <StatValue>{stats.hoursLearned}h</StatValue>
+                <StatValue>{loading ? '...' : stats.hoursLearned}h</StatValue>
                 <StatLabel>Heures apprises</StatLabel>
               </StatCard>
 
@@ -464,7 +535,7 @@ const Dashboard = () => {
                     <FiAward />
                   </StatIcon>
                 </StatHeader>
-                <StatValue>{stats.certificates}</StatValue>
+                <StatValue>{loading ? '...' : stats.certificates}</StatValue>
                 <StatLabel>Certificats</StatLabel>
               </StatCard>
 
@@ -474,8 +545,8 @@ const Dashboard = () => {
                     <FiTrendingUp />
                   </StatIcon>
                 </StatHeader>
-                <StatValue>{stats.streak}</StatValue>
-                <StatLabel>Jours de suite</StatLabel>
+                <StatValue>{loading ? '...' : stats.streak}</StatValue>
+                <StatLabel>Jours actifs</StatLabel>
               </StatCard>
             </StatsSection>
           </Header>
@@ -508,17 +579,39 @@ const Dashboard = () => {
                 Activité récente
               </SectionTitle>
               <ActivityList>
-                {notifications.map((notification) => (
-                  <ActivityItem key={notification.id}>
+                {loading ? (
+                  <ActivityItem>
                     <ActivityIcon>
-                      <notification.icon />
+                      <FiClock />
                     </ActivityIcon>
                     <ActivityContent>
-                      <ActivityTitle>{notification.title}</ActivityTitle>
-                      <ActivityTime>{notification.time}</ActivityTime>
+                      <ActivityTitle>Chargement...</ActivityTitle>
+                      <ActivityTime></ActivityTime>
                     </ActivityContent>
                   </ActivityItem>
-                ))}
+                ) : notifications.length === 0 ? (
+                  <ActivityItem>
+                    <ActivityIcon>
+                      <FiBell />
+                    </ActivityIcon>
+                    <ActivityContent>
+                      <ActivityTitle>Aucune activité récente</ActivityTitle>
+                      <ActivityTime>Commencez un cours pour voir votre activité ici</ActivityTime>
+                    </ActivityContent>
+                  </ActivityItem>
+                ) : (
+                  notifications.map((notification) => (
+                    <ActivityItem key={notification.id}>
+                      <ActivityIcon>
+                        <notification.icon />
+                      </ActivityIcon>
+                      <ActivityContent>
+                        <ActivityTitle>{notification.title}</ActivityTitle>
+                        <ActivityTime>{notification.time}</ActivityTime>
+                      </ActivityContent>
+                    </ActivityItem>
+                  ))
+                )}
               </ActivityList>
             </RecentActivity>
           </ContentGrid>
@@ -528,17 +621,29 @@ const Dashboard = () => {
               <FiBarChart />
               Progression
             </SectionTitle>
-            {progressData.map((item, index) => (
-              <ProgressItem key={index}>
+            {progressData.length === 0 ? (
+              <ProgressItem>
                 <ProgressHeader>
-                  <ProgressLabel>{item.label}</ProgressLabel>
-                  <ProgressPercent>{item.percent}%</ProgressPercent>
+                  <ProgressLabel>Aucune progression enregistrée</ProgressLabel>
+                  <ProgressPercent>0%</ProgressPercent>
                 </ProgressHeader>
                 <ProgressBar>
-                  <ProgressFill width={`${item.percent}%`} />
+                  <ProgressFill width="0%" />
                 </ProgressBar>
               </ProgressItem>
-            ))}
+            ) : (
+              progressData.map((item, index) => (
+                <ProgressItem key={index}>
+                  <ProgressHeader>
+                    <ProgressLabel>{item.label}</ProgressLabel>
+                    <ProgressPercent>{item.percent}%</ProgressPercent>
+                  </ProgressHeader>
+                  <ProgressBar>
+                    <ProgressFill width={`${item.percent}%`} />
+                  </ProgressBar>
+                </ProgressItem>
+              ))
+            )}
           </ProgressSection>
         </MainContent>
       </DashboardContainer>

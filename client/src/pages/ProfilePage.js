@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
-import { FiUser, FiMail, FiCalendar, FiAward, FiTrendingUp, FiEdit3, FiCamera, FiShield, FiLogOut } from 'react-icons/fi';
+import { FiUser, FiMail, FiCalendar, FiAward, FiTrendingUp, FiCamera, FiLogOut } from 'react-icons/fi';
 import ResponsiveNavigation from '../components/ResponsiveNavigation';
 
 const ProfileContainer = styled.div`
@@ -45,6 +45,30 @@ const ProfileAvatar = styled.div`
   margin: 0 auto 16px;
   backdrop-filter: blur(10px);
   border: 3px solid rgba(255, 255, 255, 0.3);
+  position: relative;
+  overflow: hidden;
+`;
+
+const AvatarImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+`;
+
+const AvatarOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  border-radius: 50%;
 `;
 
 const ProfileName = styled.h1`
@@ -235,7 +259,47 @@ const LogoutButton = styled.button`
 `;
 
 const ProfilePage = () => {
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
+  const [stats, setStats] = useState({
+    coursesEnrolled: 0,
+    coursesCompleted: 0,
+    certificates: 0,
+    hoursLearned: 0,
+    streak: 0,
+    averageProgress: 0
+  });
+  const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
+
+  // Charger les statistiques de l'utilisateur
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        if (!token) return;
+
+        const headers = {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        };
+
+        const response = await fetch('http://localhost:5000/api/dashboard/stats', { headers });
+        
+        if (response.ok) {
+          const statsData = await response.json();
+          setStats(statsData);
+        }
+      } catch (error) {
+        console.error('Erreur lors du chargement des statistiques:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (token) {
+      fetchStats();
+    }
+  }, [token]);
 
   const getUserInitials = () => {
     if (user) {
@@ -257,18 +321,86 @@ const ProfilePage = () => {
     logout();
   };
 
+  const handleAvatarClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Valider le fichier
+    if (!file.type.startsWith('image/')) {
+      alert('Veuillez sélectionner une image');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert('L\'image ne doit pas dépasser 5MB');
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('avatar', file);
+
+      const response = await fetch('http://localhost:5000/api/auth/avatar', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Avatar mis à jour:', result);
+        // Recharger les données utilisateur
+        window.location.reload();
+      } else {
+        const error = await response.json();
+        alert(error.message || 'Erreur lors du téléchargement');
+      }
+    } catch (error) {
+      console.error('Erreur upload avatar:', error);
+      alert('Erreur lors du téléchargement de la photo');
+    } finally {
+      setUploading(false);
+      // Réinitialiser l'input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   return (
     <ResponsiveNavigation>
       <ProfileContainer>
       <Header>
-        <ProfileAvatar>
-          {getUserInitials()}
+        <ProfileAvatar onClick={handleAvatarClick} style={{ cursor: uploading ? 'not-allowed' : 'pointer' }}>
+          {user?.profile?.avatar ? (
+            <AvatarImage src={`http://localhost:5000${user.profile.avatar}`} alt="Avatar" />
+          ) : (
+            getUserInitials()
+          )}
+          {uploading && <AvatarOverlay><FiCamera /></AvatarOverlay>}
         </ProfileAvatar>
         <ProfileName>
           {user?.firstName} {user?.lastName}
         </ProfileName>
         <ProfileEmail>{user?.email}</ProfileEmail>
       </Header>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        style={{ display: 'none' }}
+        disabled={uploading}
+      />
 
       <Content>
         <StatsGrid>
@@ -277,15 +409,15 @@ const ProfilePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
           >
-            <StatNumber>12</StatNumber>
-            <StatLabel>Cours terminés</StatLabel>
+            <StatNumber>{loading ? '...' : stats.coursesEnrolled}</StatNumber>
+            <StatLabel>Cours inscrits</StatLabel>
           </StatCard>
           <StatCard
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <StatNumber>45h</StatNumber>
+            <StatNumber>{loading ? '...' : stats.hoursLearned}h</StatNumber>
             <StatLabel>Heures étudiées</StatLabel>
           </StatCard>
           <StatCard
@@ -293,16 +425,16 @@ const ProfilePage = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <StatNumber>8</StatNumber>
-            <StatLabel>Succès</StatLabel>
+            <StatNumber>{loading ? '...' : stats.certificates}</StatNumber>
+            <StatLabel>Certificats</StatLabel>
           </StatCard>
           <StatCard
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
           >
-            <StatNumber>15</StatNumber>
-            <StatLabel>Jours de suite</StatLabel>
+            <StatNumber>{loading ? '...' : stats.streak}</StatNumber>
+            <StatLabel>Jours actifs</StatLabel>
           </StatCard>
         </StatsGrid>
 
@@ -389,14 +521,14 @@ const ProfilePage = () => {
             </InfoIcon>
             <InfoContent>
               <InfoLabel>Progression moyenne</InfoLabel>
-              <InfoValue>85%</InfoValue>
+              <InfoValue>{loading ? '...' : stats.averageProgress}%</InfoValue>
             </InfoContent>
           </InfoItem>
         </Section>
 
-        <ActionButton>
+        <ActionButton onClick={handleAvatarClick} disabled={uploading}>
           <FiCamera />
-          Changer la photo de profil
+          {uploading ? 'Téléchargement...' : 'Changer la photo de profil'}
         </ActionButton>
 
         <LogoutButton onClick={handleLogout}>

@@ -11,6 +11,10 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// use a shared secret fallback so tokens are always verifiable even without
+// environment variable set
+const JWT_SECRET = process.env.JWT_SECRET || 'educx-secret-key';
+
 // Initialiser SQLite
 const dbPath = path.join(__dirname, 'dev.db');
 const db = new sqlite3.Database(dbPath);
@@ -49,11 +53,11 @@ db.serialize(() => {
 // Middleware de sécurité
 app.use(helmet());
 
-// Rate limiting
-const limiter = rateLimit({
+// Rate limiting - disabled in development
+const limiter = process.env.NODE_ENV === 'production' ? rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100 // limite chaque IP à 100 requêtes par windowMs
-});
+}) : (req, res, next) => next();
 app.use(limiter);
 
 // Configuration CORS
@@ -143,7 +147,7 @@ app.post('/api/auth/register', async (req, res) => {
           const userId = this.lastID;
           const token = jwt.sign(
             { userId, email: email.toLowerCase() },
-            process.env.JWT_SECRET || 'secret_key',
+            JWT_SECRET,
             { expiresIn: '7d' }
           );
 
@@ -225,9 +229,7 @@ app.post('/api/auth/login', async (req, res) => {
         // Générer le token
         const token = jwt.sign(
           { userId: user.id, email: user.email },
-          process.env.JWT_SECRET || 'secret_key',
-          { expiresIn: '7d' }
-        );
+            JWT_SECRET,
 
         const userData = {
           id: user.id,

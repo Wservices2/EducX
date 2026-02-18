@@ -10,6 +10,9 @@ const Joi = require('joi');
 
 const app = express();
 
+// ensure a consistent JWT secret throughout the modules
+const JWT_SECRET = process.env.JWT_SECRET || 'educx-secret-key';
+
 // Configure Prisma for serverless
 const prisma = new PrismaClient({
     datasources: {
@@ -33,11 +36,11 @@ app.use(helmet({
     contentSecurityPolicy: false,
 }));
 
-// Rate limiting
-const limiter = rateLimit({
+// Rate limiting - disabled in development
+const limiter = process.env.NODE_ENV === 'production' ? rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 100
-});
+}) : (req, res, next) => next();
 app.use(limiter);
 
 // Configuration CORS
@@ -126,7 +129,7 @@ app.post('/api/auth/register', async (req, res) => {
 
         const token = jwt.sign(
             { userId: user.id, email: user.email },
-            process.env.JWT_SECRET || 'educx-secret-key',
+            JWT_SECRET,
             { expiresIn: '7d' }
         );
 
@@ -148,6 +151,7 @@ app.post('/api/auth/register', async (req, res) => {
     }
 });
 
+const { FiBookOpen, FiAward, FiLogOut } = require('react-icons/fi');
 // Route de connexion
 app.post('/api/auth/login', async (req, res) => {
     try {
@@ -183,7 +187,7 @@ app.post('/api/auth/login', async (req, res) => {
 
         const token = jwt.sign(
             { userId: user.id, email: user.email },
-            process.env.JWT_SECRET || 'educx-secret-key',
+            JWT_SECRET,
             { expiresIn: '7d' }
         );
 
@@ -206,5 +210,307 @@ app.post('/api/auth/login', async (req, res) => {
         });
     }
 });
+
+// Middleware d'authentification
+const authenticateToken = async (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ message: 'Token d\'accès requis' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    
+    let user;
+    try {
+      user = await prisma.user.findUnique({
+        where: { id: decoded.userId },
+        include: { profile: true }
+      });
+    } catch (prismaError) {
+      console.error('Erreur Prisma lors de la recherche utilisateur:', prismaError);
+      // Essayer sans le profil si la jointure échoue
+      user = await prisma.user.findUnique({
+        where: { id: decoded.userId }
+      });
+    }
+
+    if (!user) {
+      return res.status(401).json({ message: 'Utilisateur non trouvé' });
+    }
+
+    req.user = user;
+    next();
+  } catch (error) {
+    console.error('Erreur d\'authentification:', error);
+    return res.status(403).json({ message: 'Token invalide' });
+  }
+};
+
+
+// Dashboard API endpoints
+app.get('/api/dashboard/stats', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Vérifier si les modèles Prisma sont accessibles
+    if (!prisma.courseEnrollment || !prisma.certificate || !prisma.loginSession) {
+      console.log('Modèles Prisma non disponibles, retour de données par défaut');
+      return res.json({
+        coursesEnrolled: 0,
+        coursesCompleted: 0,
+        certificates: 0,
+        hoursLearned: 0,
+        streak: 0,
+        averageProgress: 0
+      });
+    }
+    
+    // Statistiques de l'utilisateur
+    const [
+      enrolledCourses,
+      completedCourses,
+      certificates,
+      totalProgress,
+      recentSessions
+    ] = await Promise.all([
+      // Cours inscrits
+      prisma.courseEnrollment.count({
+        where: { userId }
+      }).catch(err => {
+        console.log('Erreur courseEnrollment.count:', err);
+        return 0;
+      }),
+      // Cours complétés
+      prisma.courseEnrollment.count({
+        where: { 
+          userId,
+          completedAt: { not: null }
+        }
+      }).catch(err => {
+        console.log('Erreur courseEnrollment.completed:', err);
+        return 0;
+      }),
+      // Certificats obtenus
+      prisma.certificate.count({
+        where: { userId }
+      }).catch(err => {
+        console.log('Erreur certificate.count:', err);
+        return 0;
+      }),
+      // Progression moyenne
+      prisma.courseEnrollment.aggregate({
+        where: { userId },
+        _avg: { progress: true }
+      }).catch(err => {
+        console.log('Erreur courseEnrollment.aggregate:', err);
+        return { _avg: { progress: 0 } };
+      }),
+      // Sessions récentes (7 derniers jours)
+      prisma.loginSession.count({
+        where: {
+          userId,
+          loginAt: {
+            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+          }
+        }
+      }).catch(err => {
+        console.log('Erreur loginSession.count:', err);
+        return 0;
+      })
+    ]);
+
+    // Calculer les heures d'apprentissage (estimation basée sur la progression)
+    const hoursLearned = Math.round((totalProgress._avg.progress || 0) * enrolledCourses * 0.5);
+
+    res.json({
+      coursesEnrolled: enrolledCourses,
+      coursesCompleted: completedCourses,
+      certificates: certificates,
+      hoursLearned: hoursLearned,
+      streak: recentSessions,
+      averageProgress: Math.round(totalProgress._avg.progress || 0)
+    });
+  } catch (error) {
+    console.error('Erreur stats dashboard:', error);
+    res.json({
+      coursesEnrolled: 0,
+      coursesCompleted: 0,
+      certificates: 0,
+      hoursLearned: 0,
+      streak: 0,
+      averageProgress: 0
+    });
+  }
+});
+
+app.get('/api/dashboard/recent-activity', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Vérifier si les modèles Prisma sont accessibles
+    if (!prisma.courseEnrollment || !prisma.certificate || !prisma.loginSession) {
+      console.log('Modèles Prisma non disponibles pour activité, retour de tableau vide');
+      return res.json([]);
+    }
+    
+    // Activités récentes de l'utilisateur
+    const [recentEnrollments, recentCertificates, recentLogins] = await Promise.all([
+      // Inscriptions récentes
+      prisma.courseEnrollment.findMany({
+        where: { userId },
+        include: {
+          course: {
+            select: { title: true }
+          }
+        },
+        orderBy: { enrolledAt: 'desc' },
+        take: 3
+      }).catch(err => {
+        console.log('Erreur recentEnrollments:', err);
+        return [];
+      }),
+      // Certificats récents
+      prisma.certificate.findMany({
+        where: { userId },
+        include: {
+          course: {
+            select: { title: true }
+          }
+        },
+        orderBy: { issuedAt: 'desc' },
+        take: 2
+      }).catch(err => {
+        console.log('Erreur recentCertificates:', err);
+        return [];
+      }),
+      // Connexions récentes
+      prisma.loginSession.findMany({
+        where: { userId },
+        orderBy: { loginAt: 'desc' },
+        take: 2
+      }).catch(err => {
+        console.log('Erreur recentLogins:', err);
+        return [];
+      })
+    ]);
+
+    // Formater les activités
+    const activities = [];
+    
+    recentEnrollments.forEach(enrollment => {
+      activities.push({
+        id: `enrollment-${enrollment.id}`,
+        title: `Inscrit à "${enrollment.course.title}"`,
+        time: formatRelativeTime(enrollment.enrolledAt),
+        icon: FiBookOpen,
+        type: 'enrollment'
+      });
+    });
+    
+    recentCertificates.forEach(certificate => {
+      activities.push({
+        id: `certificate-${certificate.id}`,
+        title: `Certificat obtenu pour "${certificate.course.title}"`,
+        time: formatRelativeTime(certificate.issuedAt),
+        icon: FiAward,
+        type: 'certificate'
+      });
+    });
+    
+    recentLogins.forEach(login => {
+      activities.push({
+        id: `login-${login.id}`,
+        title: 'Connexion à la plateforme',
+        time: formatRelativeTime(login.loginAt),
+        icon: FiLogOut,
+        type: 'login'
+      });
+    });
+
+    // Trier par date et limiter à 5
+    activities.sort((a, b) => new Date(b.time) - new Date(a.time));
+    
+    res.json(activities.slice(0, 5));
+  } catch (error) {
+    console.error('Erreur activité récente:', error);
+    res.json([]);
+  }
+});
+
+app.get('/api/dashboard/progress', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    
+    // Progression par cours
+    const enrollments = await prisma.courseEnrollment.findMany({
+      where: { userId },
+      include: {
+        course: {
+          select: { 
+            title: true,
+            category: true,
+            lessons: {
+              select: { id: true }
+            }
+          }
+        }
+      },
+      orderBy: { enrolledAt: 'desc' },
+      take: 5
+    });
+
+    // Grouper par catégorie
+    const progressByCategory = {};
+    
+    enrollments.forEach(enrollment => {
+      const category = enrollment.course.category || 'Autre';
+      if (!progressByCategory[category]) {
+        progressByCategory[category] = {
+          totalProgress: 0,
+          courseCount: 0
+        };
+      }
+      progressByCategory[category].totalProgress += enrollment.progress;
+      progressByCategory[category].courseCount += 1;
+    });
+
+    // Calculer la moyenne par catégorie
+    const progressData = Object.entries(progressByCategory).map(([category, data]) => ({
+      label: category,
+      percent: Math.round(data.totalProgress / data.courseCount)
+    }));
+
+    res.json(progressData);
+  } catch (error) {
+    console.error('Erreur progression dashboard:', error);
+    res.status(500).json({
+      message: 'Erreur interne du serveur'
+    });
+  }
+});
+
+
+// Fonction utilitaire pour formater le temps relatif
+function formatRelativeTime(date) {
+  const now = new Date();
+  const diffInMs = now - new Date(date);
+  const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+  const diffInDays = Math.floor(diffInHours / 24);
+  
+  if (diffInHours < 1) {
+    return "Il y a quelques minutes";
+  } else if (diffInHours < 24) {
+    return `Il y a ${diffInHours}h`;
+  } else if (diffInDays === 1) {
+    return "Hier";
+  } else if (diffInDays < 7) {
+    return `Il y a ${diffInDays} jours`;
+  } else {
+    return `Il y a ${Math.floor(diffInDays / 7)} semaines`;
+  }
+}
 
 module.exports = app;

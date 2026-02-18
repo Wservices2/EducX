@@ -33,3 +33,5 @@ export const darkTheme = {
     iconBg: 'rgba(59, 130, 246, 0.15)',
   },
 };
+
+export const theme = lightTheme;

@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 
+// consistent JWT secret
+const JWT_SECRET = process.env.JWT_SECRET || 'educx-secret-key';
+
 const prisma = new PrismaClient();
 
 // Middleware d'authentification
@@ -15,7 +18,7 @@ const authenticateToken = async (req, res, next) => {
       });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: {
