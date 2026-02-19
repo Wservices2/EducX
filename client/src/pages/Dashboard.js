@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { API_CONFIG } from '../config';
 import {
   FiBookOpen, FiAward, FiClock, FiTrendingUp, FiPlay,
   FiUser, FiBell, FiSettings, FiZap, FiBarChart,
@@ -431,10 +432,11 @@ const Dashboard = () => {
 
         console.log('Chargement des données du dashboard avec token:', token.substring(0, 20) + '...');
 
+        const base = API_CONFIG.BASE_URL || '';
         const [statsRes, activityRes, progressRes] = await Promise.all([
-          fetch('http://localhost:5000/api/dashboard/stats', { headers }),
-          fetch('http://localhost:5000/api/dashboard/recent-activity', { headers }),
-          fetch('http://localhost:5000/api/dashboard/progress', { headers })
+          fetch(`${base}/api/dashboard/stats`, { headers }),
+          fetch(`${base}/api/dashboard/recent-activity`, { headers }),
+          fetch(`${base}/api/dashboard/progress`, { headers })
         ]);
 
         console.log('Réponses API:', {

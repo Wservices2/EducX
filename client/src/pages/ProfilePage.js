@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { API_CONFIG } from '../config';
 import { FiUser, FiMail, FiCalendar, FiAward, FiTrendingUp, FiCamera, FiLogOut } from 'react-icons/fi';
 import ResponsiveNavigation from '../components/ResponsiveNavigation';
 
@@ -283,7 +284,8 @@ const ProfilePage = () => {
           'Authorization': `Bearer ${token}`
         };
 
-        const response = await fetch('http://localhost:5000/api/dashboard/stats', { headers });
+        const base = API_CONFIG.BASE_URL || '';
+        const response = await fetch(`${base}/api/dashboard/stats`, { headers });
         
         if (response.ok) {
           const statsData = await response.json();
@@ -346,7 +348,8 @@ const ProfilePage = () => {
       const formData = new FormData();
       formData.append('avatar', file);
 
-      const response = await fetch('http://localhost:5000/api/auth/avatar', {
+      const base = API_CONFIG.BASE_URL || '';
+      const response = await fetch(`${base}/api/auth/avatar`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -381,7 +384,7 @@ const ProfilePage = () => {
       <Header>
         <ProfileAvatar onClick={handleAvatarClick} style={{ cursor: uploading ? 'not-allowed' : 'pointer' }}>
           {user?.profile?.avatar ? (
-            <AvatarImage src={`http://localhost:5000${user.profile.avatar}`} alt="Avatar" />
+            <AvatarImage src={`${API_CONFIG.BASE_URL || ''}${user.profile.avatar}`} alt="Avatar" />
           ) : (
             getUserInitials()
           )}
