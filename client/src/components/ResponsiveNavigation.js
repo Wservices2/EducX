@@ -24,6 +24,10 @@ const ContentArea = styled.div`
   @media (min-width: 769px) {
     margin-left: 280px;
   }
+
+  @media (max-width: 768px) {
+    padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px));
+  }
 `;
 
 const ResponsiveNavigation = ({ children }) => {

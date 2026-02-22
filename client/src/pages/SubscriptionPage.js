@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiAward, FiCheck, FiStar, FiZap, FiShield, FiGift, FiTrendingUp } from 'react-icons/fi';
+import { FiAward, FiCheck, FiStar, FiZap, FiShield, FiTrendingUp } from 'react-icons/fi';
 import ResponsiveNavigation from '../components/ResponsiveNavigation';
+import { useLanguage } from '../context/LanguageContext';
 
 const SubscriptionContainer = styled.div`
   min-height: 100vh;
@@ -313,94 +314,106 @@ const BenefitDescription = styled.p`
 `;
 
 const SubscriptionPage = () => {
-  const [currentPlan] = useState({
+    const { t } = useLanguage();
+    const [currentPlan] = useState({
     name: 'Plan Gratuit',
-    description: 'Accès aux cours de base',
+    description: 'Acces limite aux contenus publics',
     status: 'Actif'
   });
 
-  const [plans] = useState([
+    const [plans] = useState([
     {
-      id: 'free',
-      name: 'Gratuit',
-      price: '0',
-      period: '/mois',
+      id: 'starter-3h',
+      name: 'Flash 3h',
+      price: '100 FCFA',
+      period: '/3h',
       icon: FiStar,
-      color: 'linear-gradient(135deg, #6b7280, #4b5563)',
+      color: 'linear-gradient(135deg, #6366f1, #2563eb)',
       features: [
-        'Accès aux cours de base',
-        'Certificats limités',
-        'Support communautaire',
-        'Contenu public'
+        'Acces rapide pour une session courte',
+        'Cours essentiels disponibles',
+        'Valable pendant 3 heures',
+        'Ideal pour revision express'
       ],
       isPopular: false
     },
     {
-      id: 'premium',
-      name: 'Premium',
-      price: '9.99',
-      period: '/mois',
+      id: 'daily',
+      name: 'Journalier',
+      price: '700 FCFA',
+      period: '/jour',
+      icon: FiZap,
+      color: 'linear-gradient(135deg, #0ea5e9, #2563eb)',
+      features: [
+        'Acces aux cours de votre classe active',
+        'Matieres principales de la classe',
+        'Acces illimite pendant 24h',
+        'Activation immediate'
+      ],
+      isPopular: false
+    },
+    {
+      id: 'weekly',
+      name: 'Hebdomadaire',
+      price: '4 500 FCFA',
+      period: '/semaine',
       icon: FiAward,
       color: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
       features: [
-        'Tous les cours premium',
-        'Certificats illimités',
-        'Support prioritaire',
-        'Contenu exclusif',
-        'Accès hors ligne',
-        'Analyses détaillées'
+        'Acces complet a votre classe active',
+        'Toutes les matieres de la classe',
+        'Acces illimite pendant 7 jours',
+        'Excellent rapport qualite/prix'
       ],
       isPopular: true
     },
     {
-      id: 'pro',
-      name: 'Pro',
-      price: '19.99',
+      id: 'monthly',
+      name: 'Mensuel Premium',
+      price: '15 000 FCFA',
       period: '/mois',
-      icon: FiZap,
-      color: 'linear-gradient(135deg, #8b5cf6, #7c3aed)',
+      icon: FiShield,
+      color: 'linear-gradient(135deg, #0f766e, #0ea5a4)',
       features: [
-        'Tout Premium inclus',
-        'Cours privés',
-        'Mentorat personnel',
-        'Projets pratiques',
-        'Certifications avancées',
-        'Accès anticipé'
+        'Acces a tous les cours de toutes les matieres',
+        'Acces a toutes les classes en illimite',
+        "Valable pendant toute la duree de l abonnement",
+        'Formule premium complete'
       ],
       isPopular: false
     }
   ]);
 
-  const [benefits] = useState([
+    const [benefits] = useState([
     {
       icon: FiShield,
-      title: 'Sécurisé',
-      description: 'Vos données sont protégées'
+      title: 'Acces total',
+      description: 'Uniquement avec le plan mensuel a 15 000 FCFA'
     },
     {
-      icon: FiGift,
-      title: 'Cadeaux',
-      description: 'Bonus et surprises'
+      icon: FiZap,
+      title: 'Illimite',
+      description: 'Acces sans limite pendant la duree du mensuel premium'
     },
     {
       icon: FiTrendingUp,
       title: 'Progression',
-      description: 'Suivi détaillé'
+      description: 'Programme complet et progression continue sur toutes les classes'
     },
     {
       icon: FiAward,
-      title: 'Certificats',
-      description: 'Reconnaissance officielle'
-    },
-    {
-      icon: FiZap,
-      title: 'Rapide',
-      description: 'Accès instantané'
+      title: 'Premium Mensuel',
+      description: 'Formule complete a 15 000 FCFA'
     },
     {
       icon: FiStar,
-      title: 'Qualité',
-      description: 'Contenu premium'
+      title: 'Accessible',
+      description: 'Formules disponibles: 3h, jour, semaine ou mois'
+    },
+    {
+      icon: FiCheck,
+      title: 'Simple',
+      description: 'Activation rapide et apprentissage immediat'
     }
   ]);
 
@@ -437,14 +450,14 @@ const SubscriptionPage = () => {
             transition={{ duration: 0.8 }}
           >
             <FiAward />
-            Abonnement
+            {t('nav_subscription')}
           </Title>
           <Subtitle
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Choisissez le plan qui vous convient
+            {t('subscription_subtitle')}
           </Subtitle>
         </HeaderContent>
       </Header>
@@ -485,7 +498,7 @@ const SubscriptionPage = () => {
                     <plan.icon />
                   </PlanCardIcon>
                   <PlanCardName>{plan.name}</PlanCardName>
-                  <PlanCardPrice>${plan.price}</PlanCardPrice>
+                  <PlanCardPrice>{plan.price}</PlanCardPrice>
                   <PlanCardPeriod>{plan.period}</PlanCardPeriod>
                 </PlanCardHeader>
 
@@ -505,7 +518,7 @@ const SubscriptionPage = () => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  {plan.id === 'free' ? 'Plan actuel' : 'S\'abonner'}
+                  {t('subscription_subscribe')}
                 </SubscribeButton>
               </PlanCard>
             ))}
@@ -519,7 +532,7 @@ const SubscriptionPage = () => {
             transition={{ duration: 0.6, delay: 0.6 }}
           >
             <FiStar />
-            Avantages Premium
+            {t('subscription_benefits')}
           </SectionTitle>
 
           <BenefitsGrid>
@@ -551,3 +564,4 @@ const SubscriptionPage = () => {
 };
 
 export default SubscriptionPage;
+

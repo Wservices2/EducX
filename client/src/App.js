@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import { AuthProvider } from './context/AuthContext';
@@ -23,6 +23,8 @@ import SVT2ndePage from './pages/SVT2ndePage';
 import PhilosophieTerminalePage from './pages/PhilosophieTerminalePage';
 import Header from './components/Header';
 import Footer from './components/Footer';
+import SiteLoader from './components/SiteLoader';
+import GlobalTranslator from './components/GlobalTranslator';
 
 // Styles globaux
 const GlobalStyle = createGlobalStyle`
@@ -42,6 +44,25 @@ const GlobalStyle = createGlobalStyle`
     color: ${({ theme }) => theme.colors.text};
     line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  html[data-theme='dark'] body {
+    background: #0b1220;
+    color: #e5e7eb;
+  }
+
+  /* Force dark mode globally, including pages that still contain hardcoded light styles */
+  html[data-theme='dark'] #root {
+    filter: invert(1) hue-rotate(180deg);
+    background: #0b1220;
+    min-height: 100vh;
+  }
+
+  html[data-theme='dark'] img,
+  html[data-theme='dark'] video,
+  html[data-theme='dark'] canvas,
+  html[data-theme='dark'] iframe {
+    filter: invert(1) hue-rotate(180deg);
   }
 
   code {
@@ -79,11 +100,42 @@ const MainContent = styled.main`
 `;
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const minimumLoaderTime = 1900;
+    const start = Date.now();
+
+    const hideLoader = () => {
+      const elapsed = Date.now() - start;
+      const delay = Math.max(0, minimumLoaderTime - elapsed);
+      window.setTimeout(() => setIsLoading(false), delay);
+    };
+
+    if (document.readyState === 'complete') {
+      hideLoader();
+      return undefined;
+    }
+
+    window.addEventListener('load', hideLoader, { once: true });
+    return () => window.removeEventListener('load', hideLoader);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <ThemeProvider>
+        <GlobalStyle />
+        <SiteLoader />
+      </ThemeProvider>
+    );
+  }
+
   return (
     <AuthProvider>
       <ThemeProvider>
         <Router>
           <GlobalStyle />
+          <GlobalTranslator />
           <AppContainer>
             <Routes>
               {/* Route publique avec Header et Footer */}

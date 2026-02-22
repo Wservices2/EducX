@@ -10,6 +10,7 @@ const prisma = new PrismaClient();
 const authenticateToken = async (req, res, next) => {
   try {
     const authHeader = req.headers['authorization'];
+    console.log('HEADER:', authHeader);
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
     if (!token) {
@@ -19,6 +20,7 @@ const authenticateToken = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
+    console.log('DECODED:', decoded);
     const user = await prisma.user.findUnique({
       where: { id: decoded.userId },
       select: {
@@ -49,7 +51,7 @@ const authenticateToken = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    console.error('Erreur d\'authentification:', error);
+    console.error('JWT ERROR:', error && error.message ? error.message : error);
     return res.status(401).json({
       message: 'Token invalide'
     });

@@ -18,6 +18,10 @@ export const ThemeProvider = ({ children }) => {
         }
     }, []);
 
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+    }, [theme]);
+
     const toggleTheme = (newTheme) => {
         const nextTheme = newTheme === 'auto'
             ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')

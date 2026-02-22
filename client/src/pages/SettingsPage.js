@@ -1,9 +1,10 @@
 import React from 'react';
-import styled, { useTheme as useStyledTheme } from 'styled-components';
+import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiSettings, FiBell, FiShield, FiMoon, FiSun, FiGlobe, FiHelpCircle, FiLogOut } from 'react-icons/fi';
+import { FiBell, FiShield, FiMoon, FiSun, FiGlobe, FiHelpCircle, FiLogOut } from 'react-icons/fi';
 import ResponsiveNavigation from '../components/ResponsiveNavigation';
 import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 
 const SettingsContainer = styled.div`
   min-height: 100vh;
@@ -219,13 +220,14 @@ const ActionButton = styled.button`
 
 const SettingsPage = () => {
   const { theme, toggleTheme } = useTheme();
+  const { language, setLanguage, t } = useLanguage();
 
   return (
     <ResponsiveNavigation>
       <SettingsContainer>
         <Header>
-          <HeaderTitle>Paramètres</HeaderTitle>
-          <HeaderSubtitle>Personnalisez votre expérience</HeaderSubtitle>
+          <HeaderTitle>{t('settings_title')}</HeaderTitle>
+          <HeaderSubtitle>{t('settings_subtitle')}</HeaderSubtitle>
         </Header>
 
         <Content>
@@ -237,9 +239,7 @@ const SettingsPage = () => {
             <SectionTitle>
               <SectionIcon>
                 <FiBell />
-              </SectionIcon>
-              Notifications
-            </SectionTitle>
+              </SectionIcon>{t('settings_notifications')}</SectionTitle>
 
             <SettingItem>
               <SettingInfo>
@@ -247,8 +247,8 @@ const SettingsPage = () => {
                   <FiBell />
                 </SettingIcon>
                 <SettingContent>
-                  <SettingLabel>Notifications push</SettingLabel>
-                  <SettingDescription>Recevez des notifications sur votre appareil</SettingDescription>
+                  <SettingLabel>{t('settings_push')}</SettingLabel>
+                  <SettingDescription>{t('settings_push_desc')}</SettingDescription>
                 </SettingContent>
               </SettingInfo>
               <ToggleSwitch>
@@ -263,8 +263,8 @@ const SettingsPage = () => {
                   <FiBell />
                 </SettingIcon>
                 <SettingContent>
-                  <SettingLabel>Rappels de cours</SettingLabel>
-                  <SettingDescription>Rappels pour vos cours programmés</SettingDescription>
+                  <SettingLabel>{t('settings_reminders')}</SettingLabel>
+                  <SettingDescription>{t('settings_reminders_desc')}</SettingDescription>
                 </SettingContent>
               </SettingInfo>
               <ToggleSwitch>
@@ -282,9 +282,7 @@ const SettingsPage = () => {
             <SectionTitle>
               <SectionIcon>
                 <FiMoon />
-              </SectionIcon>
-              Apparence
-            </SectionTitle>
+              </SectionIcon>{t('settings_appearance')}</SectionTitle>
 
             <SettingItem>
               <SettingInfo>
@@ -292,16 +290,16 @@ const SettingsPage = () => {
                   {theme === 'dark' ? <FiMoon /> : <FiSun />}
                 </SettingIcon>
                 <SettingContent>
-                  <SettingLabel>Thème</SettingLabel>
-                  <SettingDescription>Choisissez votre thème préféré</SettingDescription>
+                  <SettingLabel>{t('settings_theme')}</SettingLabel>
+                  <SettingDescription>{t('settings_theme_desc')}</SettingDescription>
                 </SettingContent>
               </SettingInfo>
               <SelectSetting
                 value={theme}
                 onChange={(e) => toggleTheme(e.target.value)}
               >
-                <option value="light">Clair</option>
-                <option value="dark">Sombre</option>
+                <option value="light">{t('settings_light')}</option>
+                <option value="dark">{t('settings_dark')}</option>
               </SelectSetting>
             </SettingItem>
 
@@ -311,12 +309,12 @@ const SettingsPage = () => {
                   <FiGlobe />
                 </SettingIcon>
                 <SettingContent>
-                  <SettingLabel>Langue</SettingLabel>
-                  <SettingDescription>Langue de l'interface</SettingDescription>
+                  <SettingLabel>{t('settings_language')}</SettingLabel>
+                  <SettingDescription>{t('settings_language_desc')}</SettingDescription>
                 </SettingContent>
               </SettingInfo>
-              <SelectSetting defaultValue="fr">
-                <option value="fr">Français</option>
+              <SelectSetting value={language} onChange={(e) => setLanguage(e.target.value)}>
+                <option value="fr">Francais</option>
                 <option value="en">English</option>
               </SelectSetting>
             </SettingItem>
@@ -330,9 +328,7 @@ const SettingsPage = () => {
             <SectionTitle>
               <SectionIcon>
                 <FiShield />
-              </SectionIcon>
-              Sécurité
-            </SectionTitle>
+              </SectionIcon>{t('settings_security')}</SectionTitle>
 
             <SettingItem>
               <SettingInfo>
@@ -340,8 +336,8 @@ const SettingsPage = () => {
                   <FiShield />
                 </SettingIcon>
                 <SettingContent>
-                  <SettingLabel>Authentification à deux facteurs</SettingLabel>
-                  <SettingDescription>Ajoutez une couche de sécurité supplémentaire</SettingDescription>
+                  <SettingLabel>{t('settings_2fa')}</SettingLabel>
+                  <SettingDescription>{t('settings_2fa_desc')}</SettingDescription>
                 </SettingContent>
               </SettingInfo>
               <ToggleSwitch>
@@ -359,24 +355,22 @@ const SettingsPage = () => {
             <SectionTitle>
               <SectionIcon>
                 <FiHelpCircle />
-              </SectionIcon>
-              Support
-            </SectionTitle>
+              </SectionIcon>{t('settings_support')}</SectionTitle>
 
             <ActionButton>
               <FiHelpCircle />
-              Centre d'aide
+              {t('settings_help_center')}
             </ActionButton>
 
             <ActionButton>
               <FiHelpCircle />
-              Nous contacter
+              {t('settings_contact')}
             </ActionButton>
           </Section>
 
           <ActionButton danger>
             <FiLogOut />
-            Se déconnecter
+            {t('settings_logout')}
           </ActionButton>
         </Content>
 
@@ -386,3 +380,5 @@ const SettingsPage = () => {
 };
 
 export default SettingsPage;
+
+
