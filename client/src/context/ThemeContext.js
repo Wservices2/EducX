@@ -11,10 +11,11 @@ export const ThemeProvider = ({ children }) => {
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('app-theme');
-        if (savedTheme) {
+        if (savedTheme === 'light' || savedTheme === 'dark') {
             setTheme(savedTheme);
-        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setTheme('dark');
+        } else {
+            // Default startup theme is always light unless the user explicitly chose a saved preference.
+            setTheme('light');
         }
     }, []);
 
