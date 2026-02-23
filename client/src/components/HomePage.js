@@ -916,7 +916,7 @@ const HomePage = () => {
           </HeroText>
           <HeroImage>
             <MainImage>
-              <SlideImage image={slideshowImages[currentSlide]} />
+              <SlideImage className="no-dark-invert" image={slideshowImages[currentSlide]} />
               <SlideControls>
                 <SlideButton
                   whileHover={{ scale: 1.1 }}

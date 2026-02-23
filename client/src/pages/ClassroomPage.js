@@ -531,58 +531,82 @@ const ClassroomPage = () => {
     { id: 'terminale', name: 'Terminale', description: 'Dernière année du lycée' }
   ];
 
-  const series = [
-    { id: 'A', name: 'Série A', description: 'Littéraire' },
-    { id: 'B', name: 'Série B', description: 'Économique' },
-    { id: 'C', name: 'Série C', description: 'Scientifique' },
-    { id: 'D', name: 'Série D', description: 'Scientifique' },
-    { id: 'G2', name: 'Série G2', description: 'Gestion' },
-    { id: 'F2', name: 'Série F2', description: 'Technique' },
-    { id: 'F3', name: 'Série F3', description: 'Technique' },
-    { id: 'F4', name: 'Série F4', description: 'Technique' },
-    { id: 'HR', name: 'Série HR', description: 'Hôtellerie' },
-    { id: 'CF', name: 'Série CF', description: 'Comptabilité' }
+    const series = [
+    { id: 'A1', name: 'Serie A1', description: 'Litteraire (lettres-langues)' },
+    { id: 'A2', name: 'Serie A2', description: 'Litteraire (lettres-sciences humaines)' },
+    { id: 'B', name: 'Serie B', description: 'Economique et sociale' },
+    { id: 'C', name: 'Serie C', description: 'Scientifique (maths-physique)' },
+    { id: 'D', name: 'Serie D', description: 'Scientifique (svt-bio)' },
+    { id: 'G2', name: 'Serie G2', description: 'Gestion et comptabilite' },
+    { id: 'F2', name: 'Serie F2', description: 'Technique (electronique)' },
+    { id: 'F3', name: 'Serie F3', description: 'Technique (electrotechnique)' },
+    { id: 'F4', name: 'Serie F4', description: 'Technique (genie civil)' },
+    { id: 'HR', name: 'Serie HR', description: 'Hotellerie-restauration' },
+    { id: 'CF', name: 'Serie CF', description: 'Comptabilite-gestion' }
   ];
 
-  const subjects = [
-    { id: 'maths', name: 'Mathématiques', description: 'Algèbre, géométrie, analyse', icon: FiTarget },
-    { id: 'francais', name: 'Français', description: 'Littérature, grammaire, expression', icon: FiBookOpen },
-    { id: 'anglais', name: 'Anglais', description: 'Langue vivante étrangère', icon: FiMessageCircle },
-    { id: 'histoire', name: 'Histoire-Géo', description: 'Histoire et géographie', icon: FiMap },
-    { id: 'sciences', name: 'Sciences', description: 'Physique, chimie, biologie', icon: FiZap },
-    { id: 'philosophie', name: 'Philosophie', description: 'Pensée critique et logique', icon: FiShield },
-    { id: 'pct', name: 'PCT', description: 'Physique Chimie Technologie', icon: FiZap },
-    { id: 'svt', name: 'SVT', description: 'Sciences de la Vie et de la Terre', icon: FiZap }
-  ];
-
-  // Fonction pour obtenir les matières disponibles selon la classe et la série
-  const getAvailableSubjects = (classId, seriesId) => {
-    const baseSubjects = subjects.filter(subject => {
-      // La philosophie n'est disponible qu'à partir de la Seconde
-      if (subject.id === 'philosophie') {
-        return ['seconde', 'premiere', 'terminale'].includes(classId);
-      }
-
-      // PCT et SVT sont des matières distinctes, pas communes
-      if (subject.id === 'pct' || subject.id === 'svt') {
-        return ['seconde', 'premiere', 'terminale'].includes(classId);
-      }
-
-      // Les autres matières sont disponibles pour tous les niveaux
-      return subject.id !== 'sciences' || !['seconde', 'premiere', 'terminale'].includes(classId);
-    });
-
-    // Filtrage supplémentaire selon la série pour les classes lycée
-    if (['seconde', 'premiere', 'terminale'].includes(classId) && seriesId) {
-      // Les séries techniques (F3, F4, etc.) n'ont pas philosophie
-      if (seriesId.startsWith('F') && seriesId !== 'F2') {
-        return baseSubjects.filter(subject => subject.id !== 'philosophie');
-      }
-    }
-
-    return baseSubjects;
+  const subjectsCatalog = {
+    maths: { id: 'maths', name: 'Mathematiques', description: 'Algebre, geometrie, analyse', icon: FiTarget },
+    francais: { id: 'francais', name: 'Francais', description: 'Expression, grammaire, litterature', icon: FiBookOpen },
+    anglais: { id: 'anglais', name: 'Anglais', description: 'Langue vivante et communication', icon: FiMessageCircle },
+    histoire_geo: { id: 'histoire_geo', name: 'Histoire-Geographie', description: 'Histoire, geographie, citoyennete', icon: FiMap },
+    pct: { id: 'pct', name: 'Physique-Chimie', description: 'Physique, chimie, technologie', icon: FiZap },
+    svt: { id: 'svt', name: 'SVT', description: 'Sciences de la vie et de la terre', icon: FiZap },
+    philosophie: { id: 'philosophie', name: 'Philosophie', description: 'Reflexion, argumentation, logique', icon: FiShield },
+    economie: { id: 'economie', name: 'Economie', description: 'Economie generale et sociale', icon: FiTarget },
+    comptabilite: { id: 'comptabilite', name: 'Comptabilite', description: 'Comptabilite generale et analytique', icon: FiTarget },
+    gestion: { id: 'gestion', name: 'Gestion', description: "Gestion de l'entreprise et organisation", icon: FiTarget },
+    technologie: { id: 'technologie', name: 'Technologie', description: 'Applications techniques et industrielles', icon: FiZap },
+    hotellerie: { id: 'hotellerie', name: 'Hotellerie-Restauration', description: 'Service, cuisine, hebergement', icon: FiShield },
   };
 
+  const collegeSubjectsByClass = {
+    '6eme': ['francais', 'maths', 'anglais', 'histoire_geo', 'svt'],
+    '5eme': ['francais', 'maths', 'anglais', 'histoire_geo', 'svt', 'pct'],
+    '4eme': ['francais', 'maths', 'anglais', 'histoire_geo', 'svt', 'pct'],
+    '3eme': ['francais', 'maths', 'anglais', 'histoire_geo', 'svt', 'pct'],
+  };
+
+  const lyceeSubjectsBySeries = {
+    A1: ['francais', 'anglais', 'histoire_geo', 'philosophie'],
+    A2: ['francais', 'anglais', 'histoire_geo', 'philosophie'],
+    B: ['francais', 'anglais', 'histoire_geo', 'philosophie', 'economie', 'maths'],
+    C: ['francais', 'anglais', 'histoire_geo', 'philosophie', 'maths', 'pct'],
+    D: ['francais', 'anglais', 'histoire_geo', 'philosophie', 'maths', 'pct', 'svt'],
+    G2: ['francais', 'anglais', 'histoire_geo', 'economie', 'gestion', 'comptabilite', 'maths'],
+    CF: ['francais', 'anglais', 'histoire_geo', 'gestion', 'comptabilite', 'economie'],
+    F2: ['francais', 'anglais', 'maths', 'pct', 'technologie'],
+    F3: ['francais', 'anglais', 'maths', 'pct', 'technologie'],
+    F4: ['francais', 'anglais', 'maths', 'pct', 'technologie'],
+    HR: ['francais', 'anglais', 'gestion', 'economie', 'hotellerie'],
+  };
+
+  const getSeriesByClass = (classId) => {
+    if (classId === 'premiere' || classId === 'terminale') return series;
+    return [];
+  };
+
+  // Fonction pour obtenir les matieres disponibles selon la classe et la serie
+  const getAvailableSubjects = (classId, seriesId) => {
+    if (collegeSubjectsByClass[classId]) {
+      return collegeSubjectsByClass[classId]
+        .map((subjectId) => subjectsCatalog[subjectId])
+        .filter(Boolean);
+    }
+
+    if (classId === 'seconde') {
+      const secondeSubjectIds = ['francais', 'maths', 'anglais', 'histoire_geo', 'pct', 'svt'];
+      return secondeSubjectIds.map((subjectId) => subjectsCatalog[subjectId]).filter(Boolean);
+    }
+
+    if ((classId === 'premiere' || classId === 'terminale') && seriesId) {
+      return (lyceeSubjectsBySeries[seriesId] || [])
+        .map((subjectId) => subjectsCatalog[subjectId])
+        .filter(Boolean);
+    }
+
+    return [];
+  };
   const myCourses = [
     {
       id: 1,
@@ -633,9 +657,9 @@ const ClassroomPage = () => {
   const handleSubjectSelect = (subject) => {
     // Rediriger vers la page de la matière sélectionnée
     const subjectRoutes = {
-      'Mathématiques': 'mathematiques-6eme',
-      'Français': 'francais-6eme',
-      'Histoire': 'histoire-6eme',
+      'Mathematiques': 'mathematiques-6eme',
+      'Francais': 'francais-6eme',
+      'Histoire-Geographie': 'histoire-6eme',
       'Physique-Chimie': 'physique-chimie-2nde',
       'SVT': 'svt-2nde',
       'Philosophie': 'philosophie-terminale'
@@ -720,8 +744,8 @@ const ClassroomPage = () => {
                     ))}
                   </SelectionContainer>
 
-                  {/* Sélection de la série (si Seconde ou plus) */}
-                  {selectedClass && ['seconde', 'premiere', 'terminale'].includes(selectedClass) && (
+                  {/* Selection de la serie (Premiere et Terminale) */}
+                  {selectedClass && getSeriesByClass(selectedClass).length > 0 && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -731,7 +755,7 @@ const ClassroomPage = () => {
                         2. Choisissez votre série
                       </h3>
                       <SelectionContainer>
-                        {series.map((serie, index) => (
+                        {getSeriesByClass(selectedClass).map((serie, index) => (
                           <SelectionCard
                             key={serie.id}
                             selected={selectedSeries === serie.id}
@@ -751,14 +775,14 @@ const ClassroomPage = () => {
                   )}
 
                   {/* Sélection de la matière */}
-                  {selectedClass && (!['seconde', 'premiere', 'terminale'].includes(selectedClass) || selectedSeries) && (
+                  {selectedClass && (getSeriesByClass(selectedClass).length === 0 || selectedSeries) && (
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
                     >
                       <h3 style={{ marginBottom: '20px', color: '#1f2937', fontSize: '1.5rem' }}>
-                        {['seconde', 'premiere', 'terminale'].includes(selectedClass) ? '3. ' : '2. '}Choisissez une matière
+                        {getSeriesByClass(selectedClass).length > 0 ? '3. ' : '2. '}Choisissez une matiere
                       </h3>
                       <SubjectGrid>
                         {getAvailableSubjects(selectedClass, selectedSeries).map((subject, index) => (

@@ -65,6 +65,11 @@ const GlobalStyle = createGlobalStyle`
     filter: invert(1) hue-rotate(180deg);
   }
 
+  /* Use this class on elements that must keep original colors in dark mode. */
+  html[data-theme='dark'] .no-dark-invert {
+    filter: invert(1) hue-rotate(180deg);
+  }
+
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
       monospace;
