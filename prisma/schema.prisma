@@ -15,6 +15,7 @@ model User {
   email     String   @unique
   firstName String   @map("first_name")
   lastName  String   @map("last_name")
+  commune   String?  @map("commune")
   password  String
   role      String   @default("STUDENT")
   isActive  Boolean  @map("is_active") @default(true)

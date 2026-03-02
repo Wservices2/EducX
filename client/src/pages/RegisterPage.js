@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiCheckCircle } from 'react-icons/fi';
+import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiArrowLeft, FiCheckCircle, FiMapPin } from 'react-icons/fi';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { API_CONFIG } from '../config';
@@ -151,6 +151,25 @@ const Input = styled.input`
 
   &::placeholder {
     color: #9ca3af;
+  }
+`;
+
+const Select = styled.select`
+  width: 100%;
+  padding: 16px 16px 16px 50px;
+  border: 2px solid ${props => props.error ? '#ef4444' : '#e5e7eb'};
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  background: #f9fafb;
+  transition: all 0.3s ease;
+  appearance: none;
+
+  &:focus {
+    outline: none;
+    border-color: #1e40af;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
   }
 `;
 
@@ -342,11 +361,92 @@ const TermsText = styled.p`
   }
 `;
 
+const BENIN_COMMUNES = [
+  'Abomey',
+  'Abomey-Calavi',
+  'Adja-Ouere',
+  'Adjarra',
+  'Adjohoun',
+  'Agbangnizoun',
+  'Aguégues',
+  'Akpro-Misserete',
+  'Allada',
+  'Aplahoue',
+  'Athieme',
+  'Avrankou',
+  'Banikoara',
+  'Bante',
+  'Bassila',
+  'Bembereke',
+  'Bohicon',
+  'Bonou',
+  'Bopa',
+  'Boukoumbe',
+  'Cobly',
+  'Come',
+  'Copargo',
+  'Cotonou',
+  'Cove',
+  'Dangbo',
+  'Dassa-Zoume',
+  'Djakotomey',
+  'Djidja',
+  'Djougou',
+  'Dogbo',
+  'Glazoue',
+  'Gogounou',
+  'Grand-Popo',
+  'Houeyogbe',
+  'Ifangni',
+  'Kalale',
+  'Kandi',
+  'Karimama',
+  'Kerou',
+  'Ketou',
+  'Klouekanme',
+  'Kouande',
+  'Kpomasse',
+  'Lalo',
+  'Lokossa',
+  'Malanville',
+  'Materi',
+  'Natitingou',
+  'Ndali',
+  'Nikki',
+  'Ouake',
+  'Ouidah',
+  'Ouinhi',
+  'Ouessè',
+  'Parakou',
+  'Pehunco',
+  'Perere',
+  'Pobe',
+  'Porto-Novo',
+  'Sakete',
+  'Savalou',
+  'Save',
+  'Segbana',
+  'Seme-Podji',
+  'Sinende',
+  'So-Ava',
+  'Tanguieta',
+  'Tchaourou',
+  'Toffo',
+  'Tori-Bossito',
+  'Toucountouna',
+  'Toviklin',
+  'Ze',
+  'Za-Kpota',
+  'Zagnanado',
+  'Zogbodomey'
+];
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
+    commune: '',
     email: '',
     password: '',
     confirmPassword: ''
@@ -402,6 +502,10 @@ const RegisterPage = () => {
       newError.lastName = 'Le nom est requis';
     }
 
+    if (!formData.commune) {
+      newError.commune = 'La commune est requise';
+    }
+
     if (!formData.email.trim()) {
       newError.email = 'L\'adresse email est requise';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -439,6 +543,7 @@ const RegisterPage = () => {
         },
         body: JSON.stringify({
           fullName: `${formData.firstName} ${formData.lastName}`,
+          commune: formData.commune,
           email: formData.email,
           password: formData.password
         }),
@@ -447,12 +552,7 @@ const RegisterPage = () => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        // Registration successful
-        localStorage.setItem('token', data.data.token);
-        localStorage.setItem('user', JSON.stringify(data.data.user));
-        console.log('Registration successful:', data);
-        // Redirect to dashboard using React Router
-        navigate('/dashboard');
+        navigate('/login');
       } else {
         // Handle registration error
         setErrors({ general: data.message || 'Une erreur est survenue' });
@@ -554,6 +654,36 @@ const RegisterPage = () => {
                   animate={{ opacity: 1, y: 0 }}
                 >
                   {errors.email}
+                </ErrorMessage>
+              )}
+            </InputGroup>
+
+            <InputGroup>
+              <Label>Commune</Label>
+              <InputContainer>
+                <InputIcon>
+                  <FiMapPin />
+                </InputIcon>
+                <Select
+                  name="commune"
+                  value={formData.commune}
+                  onChange={handleInputChange}
+                  error={errors.commune}
+                >
+                  <option value="">Selectionnez votre commune</option>
+                  {BENIN_COMMUNES.map((commune) => (
+                    <option key={commune} value={commune}>
+                      {commune}
+                    </option>
+                  ))}
+                </Select>
+              </InputContainer>
+              {errors.commune && (
+                <ErrorMessage
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  {errors.commune}
                 </ErrorMessage>
               )}
             </InputGroup>

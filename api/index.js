@@ -7,6 +7,7 @@ const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
+const { BENIN_COMMUNES, toCanonicalCommune } = require('../server/constants/beninCommunes');
 
 const app = express();
 
@@ -59,7 +60,17 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 const registerSchema = Joi.object({
     fullName: Joi.string().min(2).max(50).required(),
     email: Joi.string().email().required(),
-    password: Joi.string().min(6).required()
+    password: Joi.string().min(6).required(),
+    commune: Joi.string().required().custom((value, helpers) => {
+        const canonicalCommune = toCanonicalCommune(value);
+        if (!canonicalCommune) {
+            return helpers.error('any.invalid');
+        }
+        return canonicalCommune;
+    }).messages({
+        'string.empty': 'La commune est requise',
+        'any.invalid': 'Veuillez choisir une commune valide du Benin'
+    })
 });
 
 const loginSchema = Joi.object({
@@ -77,6 +88,13 @@ app.get('/api', (req, res) => {
     });
 });
 
+app.get('/api/communes/benin', (req, res) => {
+    res.json({
+        success: true,
+        data: BENIN_COMMUNES
+    });
+});
+
 // Route d'inscription
 app.post('/api/auth/register', async (req, res) => {
     try {
@@ -85,7 +103,7 @@ app.post('/api/auth/register', async (req, res) => {
             return res.status(400).json({ message: error.details[0].message });
         }
 
-        const { fullName, email, password } = value;
+        const { fullName, email, password, commune } = value;
 
         const existingUser = await prisma.user.findUnique({
             where: { email: email.toLowerCase() }
@@ -107,6 +125,7 @@ app.post('/api/auth/register', async (req, res) => {
             data: {
                 firstName,
                 lastName,
+                commune,
                 email: email.toLowerCase(),
                 password: hashedPassword,
                 role: 'STUDENT'
@@ -115,6 +134,7 @@ app.post('/api/auth/register', async (req, res) => {
                 id: true,
                 firstName: true,
                 lastName: true,
+                commune: true,
                 email: true,
                 role: true,
                 createdAt: true

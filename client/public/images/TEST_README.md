@@ -1,30 +1,23 @@
-# Test du système d'images dynamiques
+# Test du systeme d'images dynamiques
 
-Pour tester le système d'images du slideshow :
+Pour tester le slideshow avec des photos d'ados africains en e-learning:
 
-1. **Ajoutez des images** dans le dossier `client/public/images/` :
-   - `1.jpg`
-   - `2.png`
-   - `3.jpeg`
+1. Ajoutez vos images dans `client/public/images/` avec les noms:
+   - `african-elearning-1.jpg`
+   - `african-elearning-2.jpg`
+   - `african-elearning-3.jpg`
    - etc.
 
-2. **Redémarrez le serveur de développement** :
+2. Redemarrez le front:
    ```bash
    cd client
    npm start
    ```
 
-3. **Les images se chargeront automatiquement** sur la page d'accueil
+3. Le systeme detecte automatiquement les images valides.
 
-## Images de test :
-Vous pouvez télécharger des images depuis Pexels ou Unsplash et les renommer simplement :
-- Copiez vos images dans `client/public/images/`
-- Nommez-les `1.jpg`, `2.jpg`, `3.jpg`, etc.
-- Le système les détectera automatiquement !
+## Notes
 
-## Avantages :
-- ✅ Ajout d'images sans modifier le code
-- ✅ Chargement automatique au démarrage
-- ✅ Fallback vers des images par défaut si aucune image locale
-- ✅ Support de plusieurs formats (JPG, PNG, WebP, etc.)
-- ✅ Vérification automatique de l'existence des images
+- Les noms numeriques (`1.jpg`, `2.jpg`, etc.) restent compatibles.
+- Formats supportes: JPG, JPEG, PNG, WebP.
+- Si aucune image locale n'est trouvee, un fallback distant est utilise.

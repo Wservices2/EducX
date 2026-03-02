@@ -561,15 +561,15 @@ const ClassroomPage = () => {
   };
 
   const collegeSubjectsByClass = {
-    '6eme': ['francais', 'maths', 'anglais', 'histoire_geo', 'svt'],
+    '6eme': ['francais', 'maths', 'anglais', 'histoire_geo', 'svt', 'pct', 'technologie'],
     '5eme': ['francais', 'maths', 'anglais', 'histoire_geo', 'svt', 'pct'],
     '4eme': ['francais', 'maths', 'anglais', 'histoire_geo', 'svt', 'pct'],
     '3eme': ['francais', 'maths', 'anglais', 'histoire_geo', 'svt', 'pct'],
   };
 
   const lyceeSubjectsBySeries = {
-    A1: ['francais', 'anglais', 'histoire_geo', 'philosophie'],
-    A2: ['francais', 'anglais', 'histoire_geo', 'philosophie'],
+    A1: ['francais', 'anglais', 'histoire_geo', 'philosophie', 'maths'],
+    A2: ['francais', 'anglais', 'histoire_geo', 'philosophie', 'maths'],
     B: ['francais', 'anglais', 'histoire_geo', 'philosophie', 'economie', 'maths'],
     C: ['francais', 'anglais', 'histoire_geo', 'philosophie', 'maths', 'pct'],
     D: ['francais', 'anglais', 'histoire_geo', 'philosophie', 'maths', 'pct', 'svt'],

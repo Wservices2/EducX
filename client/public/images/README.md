@@ -1,45 +1,34 @@
 # Images du slideshow d'accueil
 
-Ce dossier contient les images qui défilent automatiquement sur la page d'accueil d'EducX.
+Ce dossier contient les images qui defilent automatiquement sur la page d'accueil d'EducX.
 
-## Comment ajouter des images :
+## Theme recommande
 
-1. **Nommez vos images** avec des numéros simples :
-   - `1.jpg` ou `1.png`
-   - `2.jpg` ou `2.png`
-   - `3.jpg` ou `3.png`
-   - etc.
+Ajoutez des photos d'ados africains en situation d'e-learning:
+- avec ordinateur ou tablette
+- en classe numerique ou a la maison
+- dans un contexte educatif reel et positif
 
-2. **Formats supportés** :
-   - JPG/JPEG
-   - PNG
-   - GIF
-   - WebP
+## Nommage recommande (prioritaire)
 
-3. **Taille recommandée** :
-   - Largeur : 1000px minimum
-   - Hauteur : 750px minimum
-   - Format 4:3 ou 16:9
+Le systeme charge d'abord les fichiers nommes:
+- `african-elearning-1.jpg`
+- `african-elearning-2.jpg`
+- `african-elearning-3.jpg`
+- `african-elearning-4.jpg`
+- `african-elearning-5.jpg`
+- `african-elearning-6.jpg`
 
-4. **Qualité** :
-   - Images optimisées pour le web
-   - Taille de fichier < 500KB par image
+Formats supportes: `jpg`, `jpeg`, `png`, `webp`.
 
-## Fonctionnement automatique :
+## Compatibilite
 
-- Le système charge automatiquement toutes les images nommées `1.jpg`, `2.jpg`, etc.
-- Les images défilent toutes les 4 secondes
-- Si une image n'existe pas, elle est ignorée automatiquement
-- Images de fallback si aucune image locale n'est trouvée
+Les anciens noms numeriques restent supportes:
+- `1.jpg`, `2.jpg`, `3.jpg`, etc.
 
-## Exemple :
-Ajoutez simplement vos images dans ce dossier :
-```
-images/
-├── 1.jpg
-├── 2.jpg
-├── 3.jpg
-└── README.md
-```
+## Taille recommandee
 
-Les images s'afficheront automatiquement sur le site ! 🎯
+- Largeur: 1000px minimum
+- Hauteur: 750px minimum
+- Ratio: 4:3 ou 16:9
+- Taille fichier ideale: < 500KB

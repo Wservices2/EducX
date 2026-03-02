@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { PrismaClient } = require('@prisma/client');
 const { validateData, asyncHandler } = require('../middleware/auth');
 const { generateToken, isValidEmail, sendWelcomeEmail } = require('../utils/helpers');
+const { BENIN_COMMUNES, toCanonicalCommune } = require('../constants/beninCommunes');
 const Joi = require('joi');
 
 const router = express.Router();
@@ -23,6 +24,16 @@ const registerSchema = Joi.object({
   password: Joi.string().min(6).required().messages({
     'string.empty': 'Le mot de passe est requis',
     'string.min': 'Le mot de passe doit contenir au moins 6 caractères'
+  }),
+  commune: Joi.string().required().custom((value, helpers) => {
+    const canonicalCommune = toCanonicalCommune(value);
+    if (!canonicalCommune) {
+      return helpers.error('any.invalid');
+    }
+    return canonicalCommune;
+  }).messages({
+    'string.empty': 'La commune est requise',
+    'any.invalid': 'Veuillez choisir une commune valide du Benin'
   })
 });
 
@@ -38,7 +49,7 @@ const loginSchema = Joi.object({
 
 // Route d'inscription
 router.post('/register', validateData(registerSchema), asyncHandler(async (req, res) => {
-  const { fullName, email, password } = req.body;
+  const { fullName, email, password, commune } = req.body;
 
   // Vérifier si l'utilisateur existe déjà
   const existingUser = await prisma.user.findUnique({
@@ -65,6 +76,7 @@ router.post('/register', validateData(registerSchema), asyncHandler(async (req, 
     data: {
       firstName,
       lastName,
+      commune: toCanonicalCommune(commune),
       email: email.toLowerCase(),
       password: hashedPassword,
       role: 'STUDENT'
@@ -86,6 +98,7 @@ router.post('/register', validateData(registerSchema), asyncHandler(async (req, 
     id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
+    commune: user.commune,
     email: user.email,
     role: user.role,
     createdAt: user.createdAt
@@ -146,6 +159,7 @@ router.post('/login', validateData(loginSchema), asyncHandler(async (req, res) =
     id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
+    commune: user.commune,
     email: user.email,
     role: user.role,
     lastLogin: new Date(),
@@ -188,6 +202,7 @@ router.get('/profile', require('../middleware/auth').authenticateToken, asyncHan
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
+      commune: user.commune,
       email: user.email,
       role: user.role,
       profile: user.profile,
@@ -250,6 +265,7 @@ router.put('/profile', require('../middleware/auth').authenticateToken, asyncHan
       id: userWithProfile.id,
       firstName: userWithProfile.firstName,
       lastName: userWithProfile.lastName,
+      commune: userWithProfile.commune,
       email: userWithProfile.email,
       role: userWithProfile.role,
       profile: userWithProfile.profile,
@@ -288,6 +304,13 @@ router.post('/login-session', asyncHandler(async (req, res) => {
 }));
 
 // Route de déconnexion (côté client principalement)
+router.get('/communes/benin', asyncHandler(async (req, res) => {
+  res.json({
+    success: true,
+    data: BENIN_COMMUNES
+  });
+}));
+
 router.post('/logout', (req, res) => {
   res.json({
     message: 'Déconnexion réussie'

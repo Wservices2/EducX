@@ -1,5 +1,19 @@
 // Utility functions for loading images dynamically
 
+const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp'];
+
+const THEMED_IMAGE_BASENAMES = [
+  'african-elearning-1',
+  'african-elearning-2',
+  'african-elearning-3',
+  'african-elearning-4',
+  'african-elearning-5',
+  'african-elearning-6'
+];
+
+const withExtensions = (basePath) =>
+  IMAGE_EXTENSIONS.map((ext) => `${basePath}.${ext}`);
+
 /**
  * Loads images from the public/images directory
  * This function tries to load images with common naming patterns
@@ -8,12 +22,14 @@
 export const loadSlideshowImages = () => {
   const images = [];
 
-  // Try numbered images first (1.jpg, 2.jpg, etc.)
-  for (let i = 1; i <= 50; i++) {
-    images.push(`/images/${i}.jpg`);
-    images.push(`/images/${i}.jpeg`);
-    images.push(`/images/${i}.png`);
-    images.push(`/images/${i}.webp`);
+  // Prioritize the e-learning themed gallery
+  THEMED_IMAGE_BASENAMES.forEach((name) => {
+    images.push(...withExtensions(`/images/${name}`));
+  });
+
+  // Backward compatibility with numbered images (1.jpg, 2.jpg, etc.)
+  for (let i = 1; i <= 20; i++) {
+    images.push(...withExtensions(`/images/${i}`));
   }
 
   return images;

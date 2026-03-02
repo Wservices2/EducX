@@ -9,6 +9,7 @@ const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
+const { BENIN_COMMUNES, toCanonicalCommune } = require('./server/constants/beninCommunes');
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
 const app = express();
@@ -154,7 +155,17 @@ const authenticateToken = async (req, res, next) => {
 const registerSchema = Joi.object({
   fullName: Joi.string().min(2).max(50).required(),
   email: Joi.string().email().required(),
-  password: Joi.string().min(6).required()
+  password: Joi.string().min(6).required(),
+  commune: Joi.string().required().custom((value, helpers) => {
+    const canonicalCommune = toCanonicalCommune(value);
+    if (!canonicalCommune) {
+      return helpers.error('any.invalid');
+    }
+    return canonicalCommune;
+  }).messages({
+    'string.empty': 'La commune est requise',
+    'any.invalid': 'Veuillez choisir une commune valide du Benin'
+  })
 });
 
 const loginSchema = Joi.object({
@@ -180,6 +191,13 @@ app.get('/api/debug', (req, res) => {
     message: 'API is working',
     timestamp: new Date().toISOString(),
     registerSchemaKeys: Object.keys(registerSchema.describe().keys)
+  });
+});
+
+app.get('/api/communes/benin', (req, res) => {
+  res.json({
+    success: true,
+    data: BENIN_COMMUNES
   });
 });
 
@@ -210,7 +228,7 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { fullName, email, password } = value;
+    const { fullName, email, password, commune } = value;
 
     // Vérifier si l'utilisateur existe déjà
     const existingUser = await prisma.user.findUnique({
@@ -236,6 +254,7 @@ app.post('/api/auth/register', async (req, res) => {
       data: {
         firstName,
         lastName,
+        commune,
         email: email.toLowerCase(),
         password: hashedPassword,
         role: 'STUDENT'
@@ -244,6 +263,7 @@ app.post('/api/auth/register', async (req, res) => {
         id: true,
         firstName: true,
         lastName: true,
+        commune: true,
         email: true,
         role: true,
         createdAt: true
