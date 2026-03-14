@@ -74,6 +74,8 @@ const reverseMap = Object.fromEntries(
   Object.entries(phraseMap).map(([fr, en]) => [en, fr])
 );
 
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 const replaceText = (text, lang) => {
   const source = lang === 'en' ? phraseMap : reverseMap;
   const normalized = text.trim();
@@ -84,10 +86,12 @@ const replaceText = (text, lang) => {
   }
 
   let next = text;
-  Object.entries(source).forEach(([from, to]) => {
-    if (next.includes(from)) {
-      next = next.split(from).join(to);
-    }
+  const sortedEntries = Object.entries(source).sort(([a], [b]) => b.length - a.length);
+  sortedEntries.forEach(([from, to]) => {
+    if (!next.includes(from)) return;
+
+    const pattern = new RegExp(`(^|[^\\p{L}\\p{N}])(${escapeRegExp(from)})(?=[^\\p{L}\\p{N}]|$)`, 'gu');
+    next = next.replace(pattern, (_, prefix) => `${prefix}${to}`);
   });
   return next;
 };
